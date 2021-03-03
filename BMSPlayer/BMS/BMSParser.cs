@@ -5,11 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Luminal.Audio;
+using System.Text.RegularExpressions;
 
 namespace Supernova.BMS
 {
     class BMSParser
     {
+        public static Regex channelRx = new Regex(
+            @"#(\d{3})([0-9a-zA-Z]{2}):([0-9A-Za-z]{2,})", RegexOptions.Compiled
+        );
+
         public static BMSChart ParseBMSChart(string path)
         {
             if (!File.Exists(path))
@@ -30,6 +35,51 @@ namespace Supernova.BMS
 
                         string command, data;
 
+                        var match = channelRx.Match(line);
+                        if (match.Success)
+                        {
+                            // we have a match
+                            var measure = int.Parse(match.Groups[1].Value);
+                            var channel = match.Groups[2].Value.ToLower();
+                            var cdata = match.Groups[3];
+                            if ((cdata.Length % 2) != 0)
+                            {
+                                throw new ArgumentOutOfRangeException($"BMS file malformed: channel {channel} at measure {measure} malformed (length {cdata.Length})");
+                            }
+
+                            var meobj = new BMSMeasure
+                            {
+                                channel = channel,
+                                measureNumber = measure
+                            };
+
+                            var evtCount = (cdata.Length / 2);
+                            var step = (BMSChart.PULSE / evtCount);
+                            
+                            for (var i=0; i<cdata.Length; i+=2)
+                            {
+                                var c = cdata.Value[i..(i + 2)];
+                                var pulse = (step * (i/2));
+
+                                if (c == "00") continue;
+
+                                var evt = new ChannelEvent()
+                                {
+                                    Pulse = pulse,
+                                    Channel = channel,
+                                    Event = c,
+                                    Measure = measure
+                                };
+
+                                meobj.events.Add(evt);
+                            }
+
+                            ch.Measures[channel].Add(meobj);
+
+                            // This is not going to be a command so
+                            continue;
+                        }
+
                         if (!ParseCommand(line, out command, out data))
                         {
                             continue;
@@ -39,7 +89,7 @@ namespace Supernova.BMS
                         {
                             // uh oh spaghetti-os
                             // its a wav file, better load it huh
-                            string chan = command.Substring("WAV".Length);
+                            string chan = command[3..];
                             string dir = Path.GetDirectoryName(path);
                             string bp = Path.Combine(dir, data);
                             //string p = Path.GetFullPath(bp);
@@ -52,15 +102,16 @@ namespace Supernova.BMS
                             continue;
                         }
 
+                        
+
                         switch (command)
                         {
                             case "PLAYER":
-                                var t = PlayerType.SINGLE;
-                                if (data == "3")
+                                ch.player = data switch
                                 {
-                                    t = PlayerType.DOUBLE;
-                                }
-                                ch.player = t;
+                                    "3" => PlayerType.DOUBLE,
+                                    _ => PlayerType.SINGLE
+                                };
                                 break;
                             case "ARTIST":
                                 ch.artist = data;

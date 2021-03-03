@@ -4,17 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Supernova.BMS.Events
+namespace Supernova.BMS
 {
-    class BMSChannelEvent
+    class ChannelEvent
     {
-        public string Id = ""; // 00 - ZZ
         public float Pulse = 0f;
-
-        public virtual void OnHit()
-        {
-
-        }
-
+        public int Measure = 0;
+        public string Event = "00";
+        public string Channel = "00";
     }
 }
