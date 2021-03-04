@@ -47,14 +47,27 @@ namespace Supernova.BMS
                                 throw new ArgumentOutOfRangeException($"BMS file malformed: channel {channel} at measure {measure} malformed (length {cdata.Length})");
                             }
 
-                            var meobj = new BMSMeasure
+                            var current = ch.Measures[channel].DefaultIfEmpty(null).FirstOrDefault(delegate (BMSMeasure t)
                             {
-                                channel = channel,
-                                measureNumber = measure
-                            };
+                                if (t == null) return false;
+                                return (t.channel == channel && t.measureNumber == measure);
+                            });
 
-                            var evtCount = (cdata.Length / 2);
-                            var step = (BMSChart.PULSE / evtCount);
+                            BMSMeasure meobj;
+                            if (current == null)
+                            {
+                                meobj = new BMSMeasure
+                                {
+                                    channel = channel,
+                                    measureNumber = measure
+                                };
+                            } else
+                            {
+                                meobj = current;
+                            }
+
+                            var evtCount = (float)(cdata.Length / 2);
+                            var step = (1f / evtCount);
                             
                             for (var i=0; i<cdata.Length; i+=2)
                             {
@@ -65,7 +78,7 @@ namespace Supernova.BMS
 
                                 var evt = new ChannelEvent()
                                 {
-                                    Pulse = pulse,
+                                    BeatInMeasure = pulse,
                                     Channel = channel,
                                     Event = c,
                                     Measure = measure
@@ -74,7 +87,9 @@ namespace Supernova.BMS
                                 meobj.events.Add(evt);
                             }
 
-                            ch.Measures[channel].Add(meobj);
+                            if (meobj.events.Count == 0) continue; // what the fuck?
+
+                            if (current == null) ch.Measures[channel].Add(meobj);
 
                             // This is not going to be a command so
                             continue;

@@ -39,7 +39,7 @@ namespace Supernova.BMS
 
     class BMSChart
     {
-        public static readonly float PULSE = 960f;
+        //public static readonly float PULSE = 960f;
 
         public string title;
         public string subtitle;
