@@ -9,21 +9,21 @@ using Supernova.Core;
 
 namespace Supernova.BMS
 {
-    class BMSSample
+    public class BMSSample
     {
         public string Channel = "00"; // 00-zz
         public UniversalAudioFile File;
 
         public BMSSample(string Channel, string Path)
         {
-            Console.WriteLine($"Loading audio sample {Channel} from {Path}");
+            //Console.WriteLine($"Loading audio sample {Channel} from {Path}");
             File = new UniversalAudioFile(Path);
             if (File.Stream == null)
             {
                 Console.WriteLine("Loading failure!");
             } else
             {
-                Console.WriteLine("Loaded successfully");
+                //Console.WriteLine("Loaded successfully");
             }
         }
 

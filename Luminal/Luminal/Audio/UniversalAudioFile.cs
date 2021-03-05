@@ -29,7 +29,7 @@ namespace Luminal.Audio
                 var p = TryAlternativeFmt(extension);
                 if (Begin(Path.ChangeExtension(path, p)))
                 {
-                    Console.WriteLine($"Sigh... It said {extension}, but it's actually a {p}. Great. Oh well, we did it.");
+                    //Console.WriteLine($"Sigh... It said {extension}, but it's actually a {p}. Great. Oh well, we did it.");
                     return true;
                 }
                 return false;

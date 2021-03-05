@@ -37,7 +37,7 @@ namespace Supernova.BMS
         INSANE
     }
 
-    class BMSChart
+    public class BMSChart
     {
         //public static readonly float PULSE = 960f;
 
@@ -47,7 +47,7 @@ namespace Supernova.BMS
         public string genre;
         public int playLevel;
         public Difficulty difficulty;
-        public float initialBPM;
+        public float initialBPM = 130f;
 
         public PlayerType player = PlayerType.SINGLE;
         public float total = 160f;

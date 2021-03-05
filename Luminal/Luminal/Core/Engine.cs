@@ -24,6 +24,9 @@ namespace Luminal.Core
         public delegate void LoadingCallback(Engine main);
         public event LoadingCallback OnLoading;
 
+        public delegate void UpdateCallback(Engine main, float Delta);
+        public event UpdateCallback OnUpdate;
+
         public void StartRenderer(uint WindowWidth, uint WindowHeight, string WindowTitle, Type executingType)
         {
             Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
@@ -57,6 +60,8 @@ namespace Luminal.Core
 
                 if (sceneManager.ActiveScene != null)
                     sceneManager.ActiveScene.Update(this, t.AsSeconds());
+
+                OnUpdate(this, t.AsSeconds());
 
                 Window.Clear(Color.Black);
 

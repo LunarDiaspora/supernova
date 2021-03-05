@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Luminal.Core;
 using Supernova.BMS;
+using Supernova.Gameplay;
+using Supernova.Shared;
 
 namespace Supernova.Core
 {
@@ -18,6 +20,7 @@ namespace Supernova.Core
 
             engine.OnLoading += OnEngineLoading;
             engine.OnFinishedLoad += OnEngineLoad;
+            engine.OnUpdate += OnEngineUpdate;
 
             engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain));
         }
@@ -32,9 +35,19 @@ namespace Supernova.Core
         {
             Console.WriteLine("Supernova has loaded! Let's begin!");
 
-            BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
+            //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
+            SNGlobal.Gameplay = new GameplayCore();
+            SNGlobal.Gameplay.LoadGameplay("Songs/freedomdive/dive_n7.bme");
 
             main.sceneManager.SwitchScene("Dummy");
+        }
+
+        void OnEngineUpdate(Engine main, float Delta)
+        {
+            if (SNGlobal.Gameplay != null)
+            {
+                SNGlobal.Gameplay.UpdateEngine(Delta);
+            }
         }
     }
 }

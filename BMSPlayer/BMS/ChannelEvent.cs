@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Supernova.BMS
 {
-    class ChannelEvent
+    public class ChannelEvent
     {
         public float BeatInMeasure = 0f;
         public float Beat

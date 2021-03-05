@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using SFML.Window;
 using SFML.System;
+using Supernova.Shared;
 
 namespace Supernova.Graphics.Scenes
 {
@@ -32,7 +33,7 @@ namespace Supernova.Graphics.Scenes
             {
                 Font = Globals.Fonts["monospace"],
                 DisplayedString = "hi!",
-                CharacterSize = 12
+                CharacterSize = 20
             };
         }
 
@@ -42,7 +43,8 @@ namespace Supernova.Graphics.Scenes
             dt /= 2.0f;
             fps = 1.0f / dt;
 
-            t.DisplayedString = string.Format("{0} fps", Math.Floor(fps));
+            var oa = SNGlobal.Gameplay.Started ? SNGlobal.Gameplay.Position.ToString() : "LOADING CHART...";
+            t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
 
             x += 20 * dt;
             cs.Position = new Vector2f(x, 0f);

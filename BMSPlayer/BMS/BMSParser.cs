@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Supernova.BMS
 {
-    class BMSParser
+    public class BMSParser
     {
         public static Regex channelRx = new Regex(
             @"#(\d{3})([0-9a-zA-Z]{2}):([0-9A-Za-z]{2,})", RegexOptions.Compiled
@@ -149,8 +149,11 @@ namespace Supernova.BMS
                             case "TOTAL":
                                 ch.total = float.Parse(data);
                                 break;
+                            case "BPM":
+                                ch.initialBPM = float.Parse(data);
+                                break;
                             default:
-                                Console.WriteLine($"Unsupported BMS command {command}");
+                                //Console.WriteLine($"Unsupported BMS command {command}");
                                 break;
                         }
 
@@ -159,10 +162,12 @@ namespace Supernova.BMS
                 }
             }
 
-            // temporary
-            var audio = ch.Samples["01"];
-            audio.Play();
-            ch.Samples["03"].Play(); // oh boy
+            /*
+                // temporary
+                var audio = ch.Samples["01"];
+                audio.Play();
+                ch.Samples["03"].Play(); // oh boy
+            */
 
             return ch;
         }
