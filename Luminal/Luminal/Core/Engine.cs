@@ -31,7 +31,7 @@ namespace Luminal.Core
         {
             Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
 
-            AudioEngine.Instance.Initialise();
+            AudioEngineManager.LoadEngine("LuminalNAudioEngine");
 
             OnLoading(this);
 
@@ -74,7 +74,7 @@ namespace Luminal.Core
 
         public void Quit()
         {
-            AudioEngine.Instance.Dispose(); // Clean up after ourselves
+            AudioEngineManager.Engine.Dispose(); // Clean up after ourselves
 
             Window.Close();
         }

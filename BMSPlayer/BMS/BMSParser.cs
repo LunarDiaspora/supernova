@@ -67,12 +67,12 @@ namespace Supernova.BMS
                             }
 
                             var evtCount = (float)(cdata.Length / 2);
-                            var step = (1f / evtCount);
+                            var step = (4f / evtCount);
                             
                             for (var i=0; i<cdata.Length; i+=2)
                             {
                                 var c = cdata.Value[i..(i + 2)];
-                                var pulse = (step * (i/2));
+                                var pulse = (step * ((i/2)));
 
                                 if (c == "00") continue;
 

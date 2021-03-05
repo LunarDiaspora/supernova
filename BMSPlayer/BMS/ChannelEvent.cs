@@ -18,7 +18,7 @@ namespace Supernova.BMS
                 // We'll worry about #METER... later. Not now.
             }
         }
-        public int Measure = 0;
+        public float Measure = 0;
         public string Event = "00";
         public string Channel = "00";
     }
