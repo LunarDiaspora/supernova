@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NAudio.Vorbis;
-using NAudio.Wave;
-using NAudio.FileFormats.Mp3;
 using System.IO;
+using ManagedBass;
 
 namespace Luminal.Audio
 {
     public class UniversalAudioFile
     {
-        public WaveStream Stream;
+        public int? Stream;
 
         public UniversalAudioFile(string path)
         {
@@ -35,29 +33,10 @@ namespace Luminal.Audio
                 return false;
             }
 
-            if (extension == ".wav")
-            {
-                // wav file
-                Stream = new WaveFileReader(path);
-                return true;
-            }
-            else if (extension == ".ogg")
-            {
-                Stream = new VorbisWaveReader(path);
-                return true;
-            }
-            else if (extension == ".mp3")
-            {
-                // Oh shit, mp3 file
-                // it's big boy time
-                Stream = new MediaFoundationReader(path); // ?? 
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"Unknown file type {extension}.");
-                return false;
-            }
+            Stream = Bass.CreateStream(path, 0, 0, BassFlags.Default);
+            if (Stream == 0) Stream = null;
+            // stuff here
+            return true;
         }
 
         string TryAlternativeFmt(string t)

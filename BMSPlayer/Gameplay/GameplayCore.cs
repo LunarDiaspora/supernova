@@ -17,7 +17,7 @@ namespace Supernova.Gameplay
 
         public bool Started = false;
 
-        List<ChannelEvent> bgms;
+        public List<ChannelEvent> bgms;
 
         public void LoadGameplay(string path)
         {
