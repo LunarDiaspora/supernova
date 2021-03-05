@@ -41,11 +41,11 @@ namespace Luminal.Core
             Mode = new VideoMode(WindowWidth, WindowHeight);
             Window = new RenderWindow(Mode, WindowTitle);
 
-            Window.SetFramerateLimit(500);
+            //Window.SetFramerateLimit(500);
 
             Window.KeyPressed += WinKeyDown;
             Window.KeyReleased += WinKeyUp;
-
+            
             Window.Closed += WinClose;
 
             sfClock = new Clock();

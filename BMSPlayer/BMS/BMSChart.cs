@@ -73,5 +73,38 @@ namespace Supernova.BMS
                 Measures[i.ToLower()] = new();
             }
         }
+
+        public List<ChannelEvent> GetAllEventsInChannel(string channel)
+        {
+            var t = Measures[channel];
+            var l = new List<ChannelEvent>();
+
+            foreach (var j in t)
+            {
+                foreach (var k in j.events)
+                {
+                    l.Add(k);
+                }
+            }
+
+            return l;
+        }
+
+        public List<ChannelEvent> DebugGetAllNotableEvents()
+        {
+            var l = new List<ChannelEvent>();
+
+            var j = new[]
+            {
+                "01", "16", "11", "12", "13", "14", "15", "18", "19"
+            };
+
+            foreach (var k in j)
+            {
+                l.AddRange(GetAllEventsInChannel(k));
+            }
+
+            return l;
+        }
     }
 }

@@ -17,6 +17,8 @@ namespace Supernova.Gameplay
 
         public bool Started = false;
 
+        List<ChannelEvent> bgms;
+
         public void LoadGameplay(string path)
         {
             var cw = new ChartLoadingWorker();
@@ -27,6 +29,8 @@ namespace Supernova.Gameplay
         void _Start(BMSChart ch)
         {
             Chart = ch;
+            bgms = Chart.DebugGetAllNotableEvents();
+
             BPM = Chart.initialBPM;
 
             Started = true;
@@ -36,6 +40,19 @@ namespace Supernova.Gameplay
         {
             if (!Started) return;
             Position += Delta;
+
+            var BPS = BPM / 60;
+            var DeltaBeat = BPS * Delta;
+            Beat += DeltaBeat;
+
+            var evts = bgms.Where(t => t.Beat <= Beat); // BGMs that have passed
+            foreach (var f in evts)
+            {
+                //Console.WriteLine($"{f.Event} {f.Beat} {f.Channel}");
+                Chart.Samples[f.Event].Play();
+            }
+
+            bgms.RemoveAll(t => t.Beat <= Beat);
         }
     }
 }
