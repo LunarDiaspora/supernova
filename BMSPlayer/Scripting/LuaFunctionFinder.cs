@@ -15,17 +15,16 @@ namespace Supernova.Scripting
             var asm = Assembly.GetExecutingAssembly();
             var n = new Dictionary<string, LuaFunction>();
 
-            foreach (var t in asm.DefinedTypes)
+            foreach (var t in asm.GetTypes())
             {
                 object[] attrs = t.GetCustomAttributes(typeof(ExposeToLua), false);
                 if (attrs.Length > 1) throw new ArgumentOutOfRangeException($"Expecting 1 ExposeToLua on class {t.Name}, but found {attrs.Length}.");
                 if (attrs.Length == 1)
                 {
                     var attr = (ExposeToLua)attrs[0];
+                    Console.WriteLine($"Creating Lua function {attr.Name} from class {t.Name}");
                     var fn = (LuaFunction)Activator.CreateInstance(t);
                     n.Add(attr.Name, fn);
-
-                    break;
                 }
             }
 

@@ -19,6 +19,8 @@ namespace Supernova.Graphics.Scenes
         float dt = 0.0f;
         float fps = 0.0f;
 
+        public static List<Drawable> Drawables = new();
+
         public MainScene()
         {
             t = new Text
@@ -44,6 +46,11 @@ namespace Supernova.Graphics.Scenes
 
         public override void Draw(Engine main)
         {
+            foreach (var i in Drawables)
+            {
+                main.Window.Draw(i);
+            }
+
             main.Window.Draw(t);
         }
 
