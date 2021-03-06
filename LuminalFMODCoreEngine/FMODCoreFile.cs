@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Luminal.Audio;
-using NAudio.Wave;
-using NAudio.Vorbis;
-using NAudio.FileFormats.Mp3;
 using System.IO;
+using FmodAudio;
 
-namespace LuminalNAudioEngine
+namespace LuminalFMODCoreEngine
 {
-    public class NAudioFile : GenericAudioFile
+    public class FMODCoreFile : GenericAudioFile
     {
-        public RewindingStream Stream;
+        public Sound snd;
+        FMODCoreAudioEngine engine;
 
-        public NAudioFile(string Path)
+        public FMODCoreFile(string Path, FMODCoreAudioEngine n)
         {
+            engine = n;
             Begin(Path);
         }
 
@@ -36,32 +36,27 @@ namespace LuminalNAudioEngine
                 return false;
             }
 
-            if (extension == ".wav")
+            snd = engine.system.CreateSound(path, Mode.CreateSample);
+
+            return true;
+
+            /*if (extension == ".wav")
             {
                 // wav file
-                var st = new WaveFileReader(path);
-                Stream = new RewindingStream(st);
-                return true;
             }
             else if (extension == ".ogg")
             {
-                var st = new VorbisWaveReader(path);
-                Stream = new RewindingStream(st);
                 return true;
             }
             else if (extension == ".mp3")
             {
-                // Oh shit, mp3 file
-                // it's big boy time
-                var st = new MediaFoundationReader(path); // ?? 
-                Stream = new RewindingStream(st);
                 return true;
             }
             else
             {
                 Console.WriteLine($"Unknown file type {extension}.");
                 return false;
-            }
+            }*/
         }
 
         string TryAlternativeFmt(string t)

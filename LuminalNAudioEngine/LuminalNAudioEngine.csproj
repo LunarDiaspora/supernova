@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Luminal\Luminal.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /y $(TargetDir)$(TargetFileName) $(SolutionDir)BMSPlayer\bin\x64\$(ConfigurationName)\net5.0-windows" />
+  </Target>
+
 </Project>

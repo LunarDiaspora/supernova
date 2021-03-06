@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Luminal.Configuration;
 
 namespace Luminal.Core
 {
@@ -31,7 +32,9 @@ namespace Luminal.Core
         {
             Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
 
-            AudioEngineManager.LoadEngine("LuminalNAudioEngine");
+            var config = LuminalConfigLoader.LoadConfig("Luminal.json");
+
+            AudioEngineManager.LoadEngine(config.AudioPlugin);
 
             OnLoading(this);
 
@@ -57,6 +60,8 @@ namespace Luminal.Core
                 Window.DispatchEvents();
 
                 Time t = sfClock.Restart();
+
+                AudioEngineManager.Engine.Update(t.AsSeconds());
 
                 if (sceneManager.ActiveScene != null)
                     sceneManager.ActiveScene.Update(this, t.AsSeconds());

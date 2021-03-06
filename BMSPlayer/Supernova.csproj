@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="robocopy /is /it /njh /njs /nfl /ndl $(SolutionDir)LuminalNAudioEngine\bin\$(ConfigurationName)\net5.0-windows7.0\ $(TargetDir) *.dll /XF Luminal.dll SFML.*.dll&#xD;&#xA;robocopy /njh /njs /nfl /ndl /s /e /r:0 /z $(SolutionDir)SupernovaResources $(TargetDir)&#xD;&#xA;exit /b 0" />
+    <Exec Command="robocopy /njh /njs /nfl /ndl /s /e /r:0 /z $(SolutionDir)SupernovaResources $(TargetDir)&#xD;&#xA;exit /b 0" />
   </Target>
 
 </Project>

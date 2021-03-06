@@ -24,6 +24,7 @@ namespace LuminalNAudioEngine
         public override void Initialise()
         {
             Console.WriteLine($"Luminal NAudio Module init @ {wf.SampleRate} Hz, with {wf.Channels} channels");
+            Console.WriteLine("YOU SHOULD NOT BE USING NAUDIO. LuminalFMODCoreEngine is the way to go now.");
             SoundCard = new WaveOutEvent();
             Mixer = new MixingSampleProvider(wf);
             Mixer.ReadFully = true;
@@ -54,6 +55,10 @@ namespace LuminalNAudioEngine
             }
             else
             {
+                File.Stream.PlaybackEnd += delegate
+                {
+                    Mixer.RemoveMixerInput(ConvertChannels(File.Stream.ToSampleProvider()));
+                };
                 InternalAddMixerInput(File.Stream.ToSampleProvider());
             }
         }
