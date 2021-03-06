@@ -14,21 +14,13 @@ namespace Supernova.Graphics.Scenes
     [SceneDefinition("Dummy")]
     class DummyScene : Scene
     {
-        CircleShape cs;
         Text t;
 
         float dt = 0.0f;
         float fps = 0.0f;
 
-        float x = 0.0f;
-
         public DummyScene()
         {
-            cs = new CircleShape(100f)
-            {
-                FillColor = Color.Blue
-            };
-
             t = new Text
             {
                 Font = Globals.Fonts["monospace"],
@@ -48,14 +40,10 @@ namespace Supernova.Graphics.Scenes
                     SNGlobal.Gameplay.Position, SNGlobal.Gameplay.Beat, SNGlobal.Gameplay.BPM, SNGlobal.Gameplay.bgms.Count)
                 : "LOADING CHART...";
             t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
-
-            x += 20 * dt;
-            cs.Position = new Vector2f(x, 0f);
         }
 
         public override void Draw(Engine main)
         {
-            main.Window.Draw(cs);
             main.Window.Draw(t);
         }
 

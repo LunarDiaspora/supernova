@@ -7,6 +7,8 @@ using Luminal.Core;
 using Supernova.BMS;
 using Supernova.Gameplay;
 using Supernova.Shared;
+using Supernova.Configuration;
+using Supernova.Scripting;
 
 namespace Supernova.Core
 {
@@ -16,6 +18,8 @@ namespace Supernova.Core
 
         public SupernovaMain(uint wwidth = 1280, uint wheight = 720, string wtitle = "Supernova")
         {
+            SNGlobal.Config = SupernovaConfigLoader.LoadConfig("Supernova.json");
+
             engine = new Engine();
 
             engine.OnLoading += OnEngineLoading;
@@ -34,6 +38,10 @@ namespace Supernova.Core
         void OnEngineLoad(Engine main)
         {
             Console.WriteLine("Supernova has loaded! Let's begin!");
+            Console.WriteLine($"Loading theme {SNGlobal.Config.Theme}...");
+
+            SNGlobal.Theme = ThemeManager.LoadTheme(SNGlobal.Config.Theme);
+            Console.WriteLine($"Lua loaded: theme name = {SNGlobal.Theme.Name}");
 
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
             SNGlobal.Gameplay = new GameplayCore();
@@ -47,6 +55,11 @@ namespace Supernova.Core
             if (SNGlobal.Gameplay != null)
             {
                 SNGlobal.Gameplay.UpdateEngine(Delta);
+            }
+
+            if (SNGlobal.Theme != null)
+            {
+                SNGlobal.Theme.Update(Delta);
             }
         }
     }
