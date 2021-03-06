@@ -11,15 +11,15 @@ using Supernova.Shared;
 
 namespace Supernova.Graphics.Scenes
 {
-    [SceneDefinition("Dummy")]
-    class DummyScene : Scene
+    [SceneDefinition("Main")]
+    class MainScene : Scene
     {
         Text t;
 
         float dt = 0.0f;
         float fps = 0.0f;
 
-        public DummyScene()
+        public MainScene()
         {
             t = new Text
             {

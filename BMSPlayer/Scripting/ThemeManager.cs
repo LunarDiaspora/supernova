@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MoonSharp.Interpreter;
 using System.IO;
+using Supernova.Scripting.API;
 
 namespace Supernova.Scripting
 {
@@ -16,10 +17,18 @@ namespace Supernova.Scripting
         public Table ThemeTable;
         public string Name;
 
+        static readonly Dictionary<string, LuaFunction> FunctionMap = LuaFunctionFinder.FindLuaFunctions();
+
         public ThemeManager(string path)
         {
             script = new Script();
             var f = File.ReadAllText(path);
+
+            foreach (var (name, value) in FunctionMap)
+            {
+                script.Globals[name] = value.GetFunc();
+            }
+
             script.DoString(f);
 
             ThemeTable = LuaTable("Theme");

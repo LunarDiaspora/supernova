@@ -47,7 +47,7 @@ namespace Supernova.Core
             SNGlobal.Gameplay = new GameplayCore();
             SNGlobal.Gameplay.LoadGameplay("Songs/freedomdive/dive_n7.bme");
 
-            main.sceneManager.SwitchScene("Dummy");
+            main.sceneManager.SwitchScene("Main");
         }
 
         void OnEngineUpdate(Engine main, float Delta)
