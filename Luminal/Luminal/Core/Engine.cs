@@ -29,6 +29,9 @@ namespace Luminal.Core
         public delegate void UpdateCallback(Engine main, float Delta);
         public event UpdateCallback OnUpdate;
 
+        public delegate void DrawCallback(Engine main);
+        public event DrawCallback OnDraw;
+
         public void StartRenderer(int WindowWidth, int WindowHeight, string WindowTitle, Type executingType)
         {
             Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
@@ -89,6 +92,8 @@ namespace Luminal.Core
 
                 if (sceneManager.ActiveScene != null) 
                     sceneManager.ActiveScene.Draw(this);
+
+                OnDraw(this);
 
                 SDL.SDL_RenderPresent(Renderer);
 

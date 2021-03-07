@@ -89,5 +89,10 @@ namespace Supernova.Scripting
             // Call OnUpdate() here
             CallFunction("OnUpdate", Delta);
         }
+
+        public void Draw()
+        {
+            CallFunction("OnDraw");
+        }
     }
 }

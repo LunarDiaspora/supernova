@@ -25,6 +25,7 @@ namespace Supernova.Core
             engine.OnLoading += OnEngineLoading;
             engine.OnFinishedLoad += OnEngineLoad;
             engine.OnUpdate += OnEngineUpdate;
+            engine.OnDraw += OnEngineDraw;
 
             engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain));
         }
@@ -60,6 +61,14 @@ namespace Supernova.Core
             if (SNGlobal.Theme != null)
             {
                 SNGlobal.Theme.Update(Delta);
+            }
+        }
+
+        void OnEngineDraw(Engine main)
+        {
+            if (SNGlobal.Theme != null)
+            {
+                SNGlobal.Theme.Draw();
             }
         }
     }

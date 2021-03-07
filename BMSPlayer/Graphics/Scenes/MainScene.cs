@@ -44,20 +44,9 @@ namespace Supernova.Graphics.Scenes
 
             main.Window.Draw(t);*/
 
-            var rect = new SDL.SDL_Rect()
-            {
-                x = 300,
-                y = 300,
-                w = 50,
-                h = 50
-            };
-
             SDL.SDL_SetRenderDrawBlendMode(Engine.Renderer, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
 
             Globals.Fonts["monospace"].Draw(txt);
-
-            SDL.SDL_SetRenderDrawColor(Engine.Renderer, 255, 0, 0, 255);
-            SDL.SDL_RenderFillRect(Engine.Renderer, ref rect);
         }
 
         public override void OnKeyDown(Engine main)
