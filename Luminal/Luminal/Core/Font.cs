@@ -11,13 +11,13 @@ namespace Luminal.Core
     {
         // Wrapper class for SDL2 fonts
         public IntPtr FontPointer;
-
         public Font(string Path, int Size = 12)
         {
             FontPointer = SDL_ttf.TTF_OpenFont(Path, Size);
             if (FontPointer == IntPtr.Zero)
             {
                 Console.WriteLine("Something went wrong with TTF_OpenFont.");
+                Console.WriteLine("You are probably going to segfault the program.");
                 string Err = SDL.SDL_GetError();
                 Console.WriteLine(Err);
             }
@@ -31,19 +31,19 @@ namespace Luminal.Core
 
             SDL_ttf.TTF_SizeUTF8(FontPointer, Text, out rect.w, out rect.h);
 
-            IntPtr sur = SDL_ttf.TTF_RenderUTF8_Shaded(FontPointer, Text, Context.Colour, Context.Black);
+            IntPtr sur = SDL_ttf.TTF_RenderUTF8_Shaded(FontPointer, Text, Context.Colour, Context.TransparentBlack);
             // SDL_Surface*
             //SDL.SDL_BlitSurface(sur, IntPtr.Zero, Engine.Renderer, ref rect);
             IntPtr tex = SDL.SDL_CreateTextureFromSurface(Engine.Renderer, sur);
             var e = SDL.SDL_RenderCopy(Engine.Renderer, tex, IntPtr.Zero, ref rect);
+            SDL.SDL_RenderFlush(Engine.Renderer);
             SDL.SDL_FreeSurface(sur);
             SDL.SDL_DestroyTexture(tex);
         }
 
         public void Draw(string Text, int x = 0, int y = 0)
         {
-            int fonty = 0;
-            SDL_ttf.TTF_SizeUTF8(FontPointer, Text, out _, out fonty);
+            SDL_ttf.TTF_SizeUTF8(FontPointer, Text, out _, out int fonty);
             var j = Text.Split("\n");
             for (int k=0; k<j.Length; k++)
             {

@@ -13,6 +13,7 @@ namespace Luminal.Core
         public static SDL.SDL_Color Colour { get { return IntColour; } }
 
         public static SDL.SDL_Color Black = MakeColourFromRGBA(0, 0, 0, 255);
+        public static SDL.SDL_Color TransparentBlack = MakeColourFromRGBA(0, 0, 0, 0);
 
         public static SDL.SDL_Color MakeColourFromRGBA(byte r, byte g, byte b, byte a = 255)
         {

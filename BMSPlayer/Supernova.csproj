@@ -35,6 +35,12 @@
     <ProjectReference Include="..\Luminal\Luminal.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="SDL2-CS">
+      <HintPath>..\Luminal\SDL2-CS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="robocopy /njh /njs /nfl /ndl /s /e /r:0 /z $(SolutionDir)SupernovaResources $(TargetDir)&#xD;&#xA;exit /b 0" />
   </Target>

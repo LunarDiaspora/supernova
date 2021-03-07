@@ -65,7 +65,7 @@ namespace Luminal.Core
             {
                 SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
                 SDL.SDL_RenderClear(Renderer);
-                //SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
+                SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
 
                 SDL.SDL_Event evt;
                 while (SDL.SDL_PollEvent(out evt) == 1)
@@ -92,7 +92,7 @@ namespace Luminal.Core
 
                 SDL.SDL_RenderPresent(Renderer);
 
-                SDL.SDL_Delay(16);
+                //SDL.SDL_Delay(1);
             }
         }
 
