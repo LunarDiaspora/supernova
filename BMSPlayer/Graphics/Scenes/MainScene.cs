@@ -1,11 +1,9 @@
 ﻿using Supernova.Core;
 using Luminal.Core;
 using Luminal.Graphics;
-using SFML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SFML.Window;
 using SFML.System;
 using Supernova.Shared;
 
@@ -14,21 +12,13 @@ namespace Supernova.Graphics.Scenes
     [SceneDefinition("Main")]
     class MainScene : Scene
     {
-        Text t;
-
         float dt = 0.0f;
         float fps = 0.0f;
-
-        public static List<Drawable> Drawables = new();
+        string txt = "";
 
         public MainScene()
         {
-            t = new Text
-            {
-                Font = Globals.Fonts["monospace"],
-                DisplayedString = "hi!",
-                CharacterSize = 20
-            };
+            
         }
 
         public override void Update(Engine main, float deltaTime)
@@ -37,29 +27,27 @@ namespace Supernova.Graphics.Scenes
             dt /= 2.0f;
             fps = 1.0f / dt;
 
-            var oa = SNGlobal.Gameplay.Started ?
+            txt = SNGlobal.Gameplay.Started ?
                 string.Format("{0}\n{1}\n{2}\n{3}",
                     SNGlobal.Gameplay.Position, SNGlobal.Gameplay.Beat, SNGlobal.Gameplay.BPM, SNGlobal.Gameplay.bgms.Count)
                 : "LOADING CHART...";
-            t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
+            //t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
         }
 
         public override void Draw(Engine main)
         {
-            foreach (var i in Drawables)
+            /*foreach (var i in Drawables)
             {
                 main.Window.Draw(i);
             }
 
-            main.Window.Draw(t);
+            main.Window.Draw(t);*/
+
+            Globals.Fonts["monospace"].Draw(txt);
         }
 
-        public override void OnKeyDown(Engine main, KeyEventArgs ea)
+        public override void OnKeyDown(Engine main)
         {
-            if (ea.Code == Keyboard.Key.Escape)
-            {
-                main.Quit();
-            }
         }
     }
 }

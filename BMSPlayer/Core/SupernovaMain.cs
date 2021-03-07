@@ -16,7 +16,7 @@ namespace Supernova.Core
     {
         public Engine engine;
 
-        public SupernovaMain(uint wwidth = 1280, uint wheight = 720, string wtitle = "Supernova")
+        public SupernovaMain(int wwidth = 1280, int wheight = 720, string wtitle = "Supernova")
         {
             SNGlobal.Config = SupernovaConfigLoader.LoadConfig("Supernova.json");
 
@@ -31,8 +31,8 @@ namespace Supernova.Core
 
         void OnEngineLoading(Engine main)
         {
-            Globals.LoadFont("standard", "Resources/standard.ttf");
-            Globals.LoadFont("monospace", "Resources/monospace.ttf");
+            Globals.LoadFont("standard", "Resources/standard.ttf", 16);
+            Globals.LoadFont("monospace", "Resources/monospace.ttf", 24);
         }
 
         void OnEngineLoad(Engine main)

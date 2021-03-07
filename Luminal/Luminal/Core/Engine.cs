@@ -1,21 +1,22 @@
-﻿using SFML.Graphics;
-using SFML.System;
-using SFML.Window;
-using Luminal.Graphics;
+﻿using Luminal.Graphics;
 using Luminal.Audio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Luminal.Configuration;
+using SDL2;
+using SFML.System;
 
 namespace Luminal.Core
 {
     public class Engine
     {
-        public VideoMode Mode;
-        public RenderWindow Window;
+        public static IntPtr Renderer; // SDL_Renderer*
+        public static IntPtr Window; // SDL_Window*
         public SceneManager sceneManager;
+
+        public bool WindowOpen;
 
         public Clock sfClock;
 
@@ -28,7 +29,7 @@ namespace Luminal.Core
         public delegate void UpdateCallback(Engine main, float Delta);
         public event UpdateCallback OnUpdate;
 
-        public void StartRenderer(uint WindowWidth, uint WindowHeight, string WindowTitle, Type executingType)
+        public void StartRenderer(int WindowWidth, int WindowHeight, string WindowTitle, Type executingType)
         {
             Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
 
@@ -36,30 +37,48 @@ namespace Luminal.Core
 
             AudioEngineManager.LoadEngine(config.AudioPlugin);
 
-            OnLoading(this);
-
             sceneManager = new SceneManager(executingType);
             //sceneManager.SwitchScene("Dummy");
 
-            Mode = new VideoMode(WindowWidth, WindowHeight);
-            Window = new RenderWindow(Mode, WindowTitle);
+            Window = SDL.SDL_CreateWindow(WindowTitle, 200, 200, WindowWidth, WindowHeight, SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+            Renderer = SDL.SDL_CreateRenderer(Window, 0, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+
+            Context.SetColour(255, 255, 255, 255);
+
+            Console.WriteLine("Loading SDL2_ttf");
+            SDL_ttf.TTF_Init();
+
+            OnLoading(this);
+
+            //var sdlResult = SDL.SDL_CreateWindowAndRenderer(WindowWidth, WindowHeight, 0, out Renderer, out Window);
+            //Console.WriteLine($"{sdlResult}");
+            //SDL.SDL_SetWindowTitle(Window, WindowTitle);
 
             //Window.SetFramerateLimit(500);
 
-            Window.KeyPressed += WinKeyDown;
-            Window.KeyReleased += WinKeyUp;
-            
-            Window.Closed += WinClose;
+            OnFinishedLoad(this);
+            WindowOpen = true;
 
             sfClock = new Clock();
 
-            OnFinishedLoad(this);
-
-            while (Window.IsOpen)
+            while (WindowOpen)
             {
-                Window.DispatchEvents();
+                SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+                SDL.SDL_RenderClear(Renderer);
+                //SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
 
-                Time t = sfClock.Restart();
+                SDL.SDL_Event evt;
+                while (SDL.SDL_PollEvent(out evt) == 1)
+                {
+                    switch (evt.type)
+                    {
+                        case SDL.SDL_EventType.SDL_QUIT:
+                            WinClose();
+                            break;
+                    }
+                }
+
+                var t = sfClock.Restart();
 
                 AudioEngineManager.Engine.Update(t.AsSeconds());
 
@@ -68,12 +87,12 @@ namespace Luminal.Core
 
                 OnUpdate(this, t.AsSeconds());
 
-                Window.Clear(Color.Black);
-
                 if (sceneManager.ActiveScene != null) 
                     sceneManager.ActiveScene.Draw(this);
 
-                Window.Display();
+                SDL.SDL_RenderPresent(Renderer);
+
+                SDL.SDL_Delay(16);
             }
         }
 
@@ -81,20 +100,21 @@ namespace Luminal.Core
         {
             AudioEngineManager.Engine.Dispose(); // Clean up after ourselves
 
-            Window.Close();
+            WindowOpen = false;
+            SDL.SDL_DestroyWindow(Window);
         }
 
-        private void WinKeyDown(object sender, KeyEventArgs ea)
+        private void WinKeyDown()
         {
-            sceneManager.ActiveScene.OnKeyDown(this, ea);
+            sceneManager.ActiveScene.OnKeyDown(this);
         }
 
-        private void WinKeyUp(object sender, KeyEventArgs ea)
+        private void WinKeyUp()
         {
-            sceneManager.ActiveScene.OnKeyUp(this, ea);
+            sceneManager.ActiveScene.OnKeyUp(this);
         }
 
-        private void WinClose(object sender, EventArgs ea)
+        private void WinClose()
         {
             Quit();
         }

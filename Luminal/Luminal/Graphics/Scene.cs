@@ -1,5 +1,4 @@
-﻿using SFML.Window;
-using Luminal.Core;
+﻿using Luminal.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,12 +27,12 @@ namespace Luminal.Graphics
             // Called when scene exited.
         }
 
-        public virtual void OnKeyDown(Engine main, KeyEventArgs ea)
+        public virtual void OnKeyDown(Engine main)
         {
             // Called when key is pressed.
         }
 
-        public virtual void OnKeyUp(Engine main, KeyEventArgs ea)
+        public virtual void OnKeyUp(Engine main)
         {
             // Called when key is released.
         }
