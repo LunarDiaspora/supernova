@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MoonSharp.Interpreter;
 
 namespace Supernova.BMS
 {
+    [MoonSharpUserData]
     public class ChannelEvent
     {
         public float BeatInMeasure = 0f;

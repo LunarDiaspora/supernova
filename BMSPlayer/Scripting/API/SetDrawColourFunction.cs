@@ -24,6 +24,7 @@ namespace Supernova.Scripting.API
             }
 
             SDL.SDL_SetRenderDrawColor(Engine.Renderer, r, g, b, a);
+            Context.SetColour(r, g, b, a);
             return null;
         }
     }

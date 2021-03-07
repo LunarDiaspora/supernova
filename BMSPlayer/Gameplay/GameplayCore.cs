@@ -5,9 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Supernova.BMS;
 using Supernova.Threading;
+using Supernova.Shared;
+using MoonSharp.Interpreter;
 
 namespace Supernova.Gameplay
 {
+    [MoonSharpUserData]
     public class GameplayCore
     {
         public BMSChart Chart;
@@ -28,12 +31,23 @@ namespace Supernova.Gameplay
 
         void _Start(BMSChart ch)
         {
+            // Hey why is there a race condition here I don't understand
+
+            Console.WriteLine("_Start");
+
+            SNGlobal.Chart = ch;
+
             Chart = ch;
             bgms = Chart.DebugGetAllNotableEvents();
 
             BPM = Chart.initialBPM;
 
             Started = true;
+
+            if (SNGlobal.Theme != null)
+            {
+                SNGlobal.Theme.OnChartLoaded();
+            }
         }
 
         public void UpdateEngine(float Delta)

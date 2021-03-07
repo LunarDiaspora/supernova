@@ -46,6 +46,7 @@ namespace Supernova.Graphics.Scenes
 
             SDL.SDL_SetRenderDrawBlendMode(Engine.Renderer, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
 
+            Context.SetColour(255, 255, 255, 255);
             Globals.Fonts["monospace"].Draw(txt);
         }
 

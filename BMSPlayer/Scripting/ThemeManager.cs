@@ -94,5 +94,10 @@ namespace Supernova.Scripting
         {
             CallFunction("OnDraw");
         }
+
+        public void OnChartLoaded()
+        {
+            CallFunction("OnChartLoad");
+        }
     }
 }

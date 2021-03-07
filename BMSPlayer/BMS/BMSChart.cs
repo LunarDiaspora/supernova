@@ -90,6 +90,23 @@ namespace Supernova.BMS
             return l;
         }
 
+        public List<ChannelEvent> GetAllNotes()
+        {
+            var l = new List<ChannelEvent>();
+
+            var j = new[]
+            {
+                "16", "11", "12", "13", "14", "15", "18", "19"
+            };
+
+            foreach (var k in j)
+            {
+                l.AddRange(GetAllEventsInChannel(k));
+            }
+
+            return l;
+        }
+
         public List<ChannelEvent> DebugGetAllNotableEvents()
         {
             var l = new List<ChannelEvent>();

@@ -27,6 +27,7 @@ namespace Supernova.Scripting.API
                 h = h
             };
 
+
             SDL.SDL_RenderFillRect(Engine.Renderer, ref r);
 
             return null;
