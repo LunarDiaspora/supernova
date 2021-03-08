@@ -25,6 +25,8 @@ namespace Luminal.Core
 
         public void RawDraw(string Text, int x = 0, int y = 0)
         {
+            if (!Engine.WindowOpen) return;
+
             SDL.SDL_Rect rect = new();
             rect.x = x;
             rect.y = y;

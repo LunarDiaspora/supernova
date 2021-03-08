@@ -9,7 +9,7 @@
     <AssemblyName>Luminal</AssemblyName>
     <PackageId>LuminalEngine</PackageId>
     <Product>Luminal Game Engine</Product>
-    <RootNamespace>Luminal</RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

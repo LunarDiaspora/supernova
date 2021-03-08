@@ -34,6 +34,9 @@ namespace Supernova.Core
         {
             Globals.LoadFont("standard", "Resources/standard.ttf", 16);
             Globals.LoadFont("monospace", "Resources/monospace.ttf", 24);
+
+            var a = Context.LoadImage("test", "Themes/Default/key.png");
+            Console.WriteLine(a);
         }
 
         void OnEngineLoad(Engine main)

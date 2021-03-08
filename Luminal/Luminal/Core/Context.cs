@@ -17,6 +17,8 @@ namespace Luminal.Core
 
         public static string CurrentFont = "monospace";
 
+        public static Dictionary<string, Image> Images = new();
+
         public static SDL.SDL_Color MakeColourFromRGBA(byte r, byte g, byte b, byte a = 255)
         {
             return new SDL.SDL_Color
@@ -26,6 +28,21 @@ namespace Luminal.Core
                 b = b,
                 a = a
             };
+        }
+
+        public static bool LoadImage(string Name, string Path)
+        {
+            var ok = Image.LoadFrom(Path, out Image n);
+            if (ok) Images[Name] = n;
+            return ok;
+        }
+
+        public static void FreeAllImages()
+        {
+            foreach (var (_, value) in Images)
+            {
+                value.Destroy();
+            }
         }
 
         public static void SetColour(byte r, byte g, byte b, byte a = 255)

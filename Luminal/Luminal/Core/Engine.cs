@@ -16,7 +16,7 @@ namespace Luminal.Core
         public static IntPtr Window; // SDL_Window*
         public SceneManager sceneManager;
 
-        public bool WindowOpen;
+        public static bool WindowOpen;
 
         public Clock sfClock;
 
@@ -50,6 +50,10 @@ namespace Luminal.Core
 
             Console.WriteLine("Loading SDL2_ttf");
             SDL_ttf.TTF_Init();
+
+            Console.WriteLine("Loading SDL2_image");
+            SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_JPG | SDL_image.IMG_InitFlags.IMG_INIT_PNG |
+                               SDL_image.IMG_InitFlags.IMG_INIT_TIF | SDL_image.IMG_InitFlags.IMG_INIT_WEBP);
 
             OnLoading(this);
 
@@ -107,6 +111,9 @@ namespace Luminal.Core
 
             WindowOpen = false;
             SDL.SDL_DestroyWindow(Window);
+            SDL.SDL_DestroyRenderer(Renderer);
+
+            Context.FreeAllImages();
         }
 
         private void WinKeyDown()
