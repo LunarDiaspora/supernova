@@ -23,5 +23,19 @@ namespace Supernova.BMS
         public float Measure = 0;
         public string Event = "00";
         public string Channel = "00";
+
+        public int? Column
+        {
+            get
+            {
+                var e = new string[]
+                {
+                    "16", "11", "12", "13", "14", "15", "18", "19"
+                };
+                int? j = Array.IndexOf(e, Channel);
+                if (j == -1) j = null;
+                return j;
+            }
+        }
     }
 }

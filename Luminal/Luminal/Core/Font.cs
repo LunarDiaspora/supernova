@@ -16,10 +16,12 @@ namespace Luminal.Core
             FontPointer = SDL_ttf.TTF_OpenFont(Path, Size);
             if (FontPointer == IntPtr.Zero)
             {
-                Console.WriteLine("Something went wrong with TTF_OpenFont.");
-                Console.WriteLine("You are probably going to segfault the program.");
+                //Console.WriteLine("Something went wrong with TTF_OpenFont.");
+                //Console.WriteLine("You are probably going to segfault the program.");
+                //string Err = SDL.SDL_GetError();
+                //Console.WriteLine(Err);
                 string Err = SDL.SDL_GetError();
-                Console.WriteLine(Err);
+                throw new SDLException($"TTF_OpenFont error! SDL_GetError = {Err}");
             }
         }
 

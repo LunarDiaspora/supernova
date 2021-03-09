@@ -86,7 +86,7 @@ namespace Supernova.BMS
                     l.Add(k);
                 }
             }
-
+            
             return l;
         }
 
@@ -104,7 +104,7 @@ namespace Supernova.BMS
                 l.AddRange(GetAllEventsInChannel(k));
             }
 
-            return l;
+            return l.OrderBy(n=>n.Beat).ToList();
         }
 
         public List<ChannelEvent> DebugGetAllNotableEvents()
@@ -121,7 +121,7 @@ namespace Supernova.BMS
                 l.AddRange(GetAllEventsInChannel(k));
             }
 
-            return l;
+            return l.OrderBy(n => n.Beat).ToList();
         }
     }
 }

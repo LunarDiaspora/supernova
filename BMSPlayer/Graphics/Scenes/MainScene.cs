@@ -29,8 +29,9 @@ namespace Supernova.Graphics.Scenes
             fps = 1.0f / dt;
 
             txt = SNGlobal.Gameplay.Started ?
-                string.Format("{4} fps\n{0}\n{1}\n{2}\n{3}",
-                    SNGlobal.Gameplay.Position, SNGlobal.Gameplay.Beat, SNGlobal.Gameplay.BPM, SNGlobal.Gameplay.bgms.Count, fps)
+                string.Format("{4} fps\n{0}\n{1}\n{2}\n{3} - {5}",
+                    SNGlobal.Gameplay.Position, SNGlobal.Gameplay.Beat, SNGlobal.Gameplay.BPM, SNGlobal.Gameplay.bgms.Count, fps,
+                    SNGlobal.Gameplay.Notes.Count)
                 : "LOADING CHART...";
             //t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
         }

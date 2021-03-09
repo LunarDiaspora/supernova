@@ -141,7 +141,13 @@ namespace Supernova.BMS
                                 ch.genre = data;
                                 break;
                             case "PLAYLEVEL":
-                                ch.playLevel = int.Parse(data);
+                                try
+                                {
+                                    ch.playLevel = int.Parse(data);
+                                } catch
+                                {
+                                    ch.playLevel = 0;
+                                }
                                 break;
                             case "DIFFICULTY":
                                 ch.difficulty = (Difficulty)int.Parse(data);

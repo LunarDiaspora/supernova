@@ -7,6 +7,7 @@ using MoonSharp.Interpreter;
 using System.IO;
 using Supernova.Scripting.API;
 using MoonSharp.Interpreter.Interop;
+using Supernova.BMS;
 
 namespace Supernova.Scripting
 {
@@ -98,6 +99,11 @@ namespace Supernova.Scripting
         public void OnChartLoaded()
         {
             CallFunction("OnChartLoad");
+        }
+
+        public void DrawNote(ChannelEvent n)
+        {
+            CallFunction("DrawNote", n);
         }
     }
 }

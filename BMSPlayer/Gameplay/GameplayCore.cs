@@ -21,6 +21,11 @@ namespace Supernova.Gameplay
         public bool Started = false;
 
         public List<ChannelEvent> bgms;
+        public List<ChannelEvent> Notes;
+
+        public int BgmCount = 0;
+        public int NoteCount = 0;
+        public int BgmFrameCount = 0;
 
         public void LoadGameplay(string path)
         {
@@ -38,7 +43,8 @@ namespace Supernova.Gameplay
             SNGlobal.Chart = ch;
 
             Chart = ch;
-            bgms = Chart.DebugGetAllNotableEvents();
+            bgms = Chart.GetAllEventsInChannel("01");
+            Notes = Chart.GetAllNotes();
 
             BPM = Chart.initialBPM;
 
@@ -59,14 +65,48 @@ namespace Supernova.Gameplay
             var DeltaBeat = BPS * Delta;
             Beat += DeltaBeat;
 
-            var evts = bgms.Where(t => t.Beat <= Beat); // BGMs that have passed
-            foreach (var f in evts)
+            //Notes.RemoveAll(t => t.Beat <= Beat);
+
+            var h = Notes.Skip(NoteCount).Take(150);
+
+            //var BgmFrameAmount = 50;
+
+            var nb = bgms.Where(t => t.Beat <= Beat);
+            var nn = h.Where(t => t.Beat <= Beat);
+
+            //var evts = bgms.Where(t => t.Beat <= Beat); // BGMs that have passed
+            foreach (var f in nb)
             {
                 //Console.WriteLine($"{f.Event} {f.Beat} {f.Channel}");
                 Chart.Samples[f.Event].Play();
+                //bgms.Remove(f);
+                BgmCount++;
+                //if (BgmCount >= BgmFrameAmount)
+                //{
+                //    BgmCount = 0;
+                //    BgmFrameCount++;
+                //}
             }
 
             bgms.RemoveAll(t => t.Beat <= Beat);
+
+            foreach (var n in h)
+            {
+                SNGlobal.Theme.DrawNote(n);
+                //NoteCount++;
+            }
+
+            foreach (var n in nn)
+            {
+                Chart.Samples[n.Event].Play();
+                NoteCount++;
+            }
+
+            //Notes.RemoveAll(t => t.Beat <= Beat);
+
+            //var n = bgms.Where(t => t.Beat <= Beat);
         }
+
+        public IList<ChannelEvent> GetNotes() => Notes;
     }
 }
