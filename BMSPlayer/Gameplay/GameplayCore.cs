@@ -67,7 +67,7 @@ namespace Supernova.Gameplay
 
             //Notes.RemoveAll(t => t.Beat <= Beat);
 
-            var h = Notes.Skip(NoteCount).Take(150);
+            var h = Notes.Skip(NoteCount);
 
             //var BgmFrameAmount = 50;
 
@@ -89,12 +89,6 @@ namespace Supernova.Gameplay
             }
 
             bgms.RemoveAll(t => t.Beat <= Beat);
-
-            foreach (var n in h)
-            {
-                SNGlobal.Theme.DrawNote(n);
-                //NoteCount++;
-            }
 
             foreach (var n in nn)
             {

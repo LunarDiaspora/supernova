@@ -12,16 +12,16 @@ function OnStart()
 
 end
 
-local offset = 150
-local xoffset = 250
-local nw = 60
-local nh = 20
+Theme.NoteYOffset = 150
+Theme.NoteXOffset = 250
+Theme.NoteWidth = 60
+Theme.NoteHeight = 20
 
-local COLOUR_SC = {227, 64, 32}
-local COLOUR_WHITE = {242, 242, 242}
-local COLOUR_BLUE = {34, 136, 214}
+local COLOUR_SC = {227, 64, 32, 255}
+local COLOUR_WHITE = {242, 242, 242, 255}
+local COLOUR_BLUE = {34, 136, 214, 255}
 
-local cols = {
+Theme.NoteColours = {
     [0] = COLOUR_SC,
     COLOUR_WHITE, COLOUR_BLUE,
     COLOUR_WHITE, COLOUR_BLUE,
@@ -40,7 +40,17 @@ function OnDraw()
     --SN_DrawText("poggers", 300, 300)
 
     SN_SetDrawColour(214, 15, 15, 128)
-    SN_DrawFilledRect(xoffset,(720-offset),8*nw,nh)
+    SN_DrawFilledRect(Theme.NoteXOffset,(720-Theme.NoteYOffset),8*Theme.NoteWidth,Theme.NoteHeight)
+
+    if gp.Started then
+        SN_SetDrawColour(255, 255, 255, 255)
+        SN_SetFont("monospace")
+        local title = gp.Chart.artist .. " - " .. gp.Chart.title
+        if gp.Chart.subtitle then
+            title = title .. " " .. gp.Chart.subtitle
+        end
+        SN_DrawText(title, Theme.NoteXOffset, (720-Theme.NoteYOffset)+30)
+    end
 
     --if gp.Started then
     --    for k=0,gp.Notes.Count-1 do
@@ -55,6 +65,7 @@ end
 --    notes = SN_GetNotes()
 --end
 
+--[[
 function DrawNote(v)
     local gp = SN_GetGameplay()
 
@@ -69,3 +80,4 @@ function DrawNote(v)
         end
     end
 end
+]]

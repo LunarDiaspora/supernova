@@ -32,9 +32,15 @@ namespace Luminal.Core
         public delegate void DrawCallback(Engine main);
         public event DrawCallback OnDraw;
 
+        public static int Width;
+        public static int Height;
+
         public void StartRenderer(int WindowWidth, int WindowHeight, string WindowTitle, Type executingType)
         {
             Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
+
+            Width = WindowWidth;
+            Height = WindowHeight;
 
             var config = LuminalConfigLoader.LoadConfig("Luminal.json");
 
@@ -94,10 +100,10 @@ namespace Luminal.Core
 
                 OnUpdate(this, t.AsSeconds());
 
+                OnDraw(this);
+
                 if (sceneManager.ActiveScene != null) 
                     sceneManager.ActiveScene.Draw(this);
-
-                OnDraw(this);
 
                 SDL.SDL_RenderPresent(Renderer);
 

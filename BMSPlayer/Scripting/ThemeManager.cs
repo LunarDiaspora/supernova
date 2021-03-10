@@ -19,7 +19,15 @@ namespace Supernova.Scripting
         public Table ThemeTable;
         public string Name;
 
+        public int NoteXOffset;
+        public int NoteYOffset;
+
+        public int NoteWidth;
+        public int NoteHeight;
+
         static Dictionary<string, LuaFunction> FunctionMap;
+
+        public List<Colour> ChartColours = new();
 
         public ThemeManager(string path)
         {
@@ -40,7 +48,34 @@ namespace Supernova.Scripting
             CallFunction("OnStart");
 
             ThemeTable = LuaTable("Theme");
+
             Name = ThemeTable.Get("Name").String ?? "No name specified!!";
+
+            var ctable = ThemeTable.Get("NoteColours").Table;
+            var t = ctable.Values.ToList();
+            for (int i=0; i<t.Count; i++)
+            {
+                var val = t[i];
+                var tab = val.Table;
+                var r = (int)tab.Get(1).Number;
+                var g = (int)tab.Get(2).Number;
+                var b = (int)tab.Get(3).Number;
+                var a = (int)tab.Get(4).Number;
+                var v = new Colour()
+                {
+                    r = r,
+                    g = g,
+                    b = b,
+                    a = a
+                };
+                ChartColours.Add(v);
+            }
+
+            NoteXOffset = (int)ThemeTable.Get("NoteXOffset").Number;
+            NoteYOffset = (int)ThemeTable.Get("NoteYOffset").Number;
+
+            NoteWidth = (int)ThemeTable.Get("NoteWidth").Number;
+            NoteHeight = (int)ThemeTable.Get("NoteHeight").Number;
         }
         
         public static ThemeManager LoadTheme(string name)
@@ -101,9 +136,9 @@ namespace Supernova.Scripting
             CallFunction("OnChartLoad");
         }
 
-        public void DrawNote(ChannelEvent n)
+        public void DrawAfterNotes()
         {
-            CallFunction("DrawNote", n);
+            CallFunction("DrawAfterNotes");
         }
     }
 }
