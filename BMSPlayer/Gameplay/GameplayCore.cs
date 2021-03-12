@@ -7,9 +7,22 @@ using Supernova.BMS;
 using Supernova.Threading;
 using Supernova.Shared;
 using MoonSharp.Interpreter;
+using SDL2;
+using Luminal.Core;
+using Supernova.Core;
 
 namespace Supernova.Gameplay
 {
+    public enum Judgement
+    {
+        PERFECT_GREAT,
+        GREAT,
+        GOOD,
+        BAD,
+        POOR,
+        EXTRA_POOR = -1
+    }
+
     [MoonSharpUserData]
     public class GameplayCore
     {
@@ -18,10 +31,18 @@ namespace Supernova.Gameplay
         public float Beat = 0f;
         public float Position = 0f;
 
+        public float CurrentBPMStartBeat = 0f;
+        public float CurrentBPMStartTime = 0f;
+
         public bool Started = false;
 
         public List<ChannelEvent> bgms;
         public List<ChannelEvent> Notes;
+
+        public List<(Judgement, float)> TimingWindowMap;
+        public float EndOfBadWindow;
+
+        public Dictionary<Judgement, int> JudgementCount = new();
 
         public int BgmCount = 0;
         public int NoteCount = 0;
@@ -36,10 +57,6 @@ namespace Supernova.Gameplay
 
         void _Start(BMSChart ch)
         {
-            // Hey why is there a race condition here I don't understand
-
-            Console.WriteLine("_Start");
-
             SNGlobal.Chart = ch;
 
             Chart = ch;
@@ -47,6 +64,9 @@ namespace Supernova.Gameplay
             Notes = Chart.GetAllNotes();
 
             BPM = Chart.initialBPM;
+            
+            TimingWindowMap = TimingWindows.BuildTimingWindowMap(Chart.rank);
+            EndOfBadWindow = TimingWindows.ScaleWindow(BaseTimingWindow.BAD, Chart.rank);
 
             Started = true;
 
@@ -54,6 +74,8 @@ namespace Supernova.Gameplay
             {
                 SNGlobal.Theme.OnChartLoaded();
             }
+
+            SDL.SDL_SetWindowTitle(Engine.Window, string.Format("{0} | {1} - {2}", SupernovaMain.BaseTitle, ch.artist, ch.title));
         }
 
         public void UpdateEngine(float Delta)
@@ -72,7 +94,7 @@ namespace Supernova.Gameplay
             //var BgmFrameAmount = 50;
 
             var nb = bgms.Where(t => t.Beat <= Beat);
-            var nn = h.Where(t => t.Beat <= Beat);
+            var nn = h.Where(t => t.Time+EndOfBadWindow <= (Position));
 
             //var evts = bgms.Where(t => t.Beat <= Beat); // BGMs that have passed
             foreach (var f in nb)
@@ -92,13 +114,19 @@ namespace Supernova.Gameplay
 
             foreach (var n in nn)
             {
-                Chart.Samples[n.Event].Play();
+                //Chart.Samples[n.Event].Play();
+                JudgementCount[Judgement.POOR]++;
                 NoteCount++;
             }
 
             //Notes.RemoveAll(t => t.Beat <= Beat);
 
             //var n = bgms.Where(t => t.Beat <= Beat);
+        }
+
+        public float GetBPMAtBeat(float x)
+        {
+            return BPM; // FUCKING TEMP AS SHIT
         }
 
         public IList<ChannelEvent> GetNotes() => Notes;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Luminal.Audio;
 using System.Text.RegularExpressions;
+using Supernova.Gameplay;
 
 namespace Supernova.BMS
 {
@@ -119,7 +120,7 @@ namespace Supernova.BMS
 
                         
 
-                        switch (command)
+                        switch (command.ToUpper())
                         {
                             case "PLAYER":
                                 ch.player = data switch
@@ -150,6 +151,7 @@ namespace Supernova.BMS
                                 }
                                 break;
                             case "DIFFICULTY":
+                                Console.WriteLine(data);
                                 ch.difficulty = (Difficulty)int.Parse(data);
                                 break;
                             case "TOTAL":
@@ -157,6 +159,9 @@ namespace Supernova.BMS
                                 break;
                             case "BPM":
                                 ch.initialBPM = float.Parse(data);
+                                break;
+                            case "RANK":
+                                ch.rank = TimingWindows.IntToWindow(int.Parse(data));
                                 break;
                             default:
                                 //Console.WriteLine($"Unsupported BMS command {command}");

@@ -49,7 +49,9 @@ function OnDraw()
         if gp.Chart.subtitle then
             title = title .. " " .. gp.Chart.subtitle
         end
+        local diffText = tostring(gp.Chart.difficulty) .. " Lv. " .. (gp.Chart.playLevel or "???")
         SN_DrawText(title, Theme.NoteXOffset, (720-Theme.NoteYOffset)+30)
+        SN_DrawText(diffText, Theme.NoteXOffset, (720-Theme.NoteYOffset)+65)
     end
 
     --if gp.Started then

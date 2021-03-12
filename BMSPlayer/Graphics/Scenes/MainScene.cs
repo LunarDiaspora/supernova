@@ -30,9 +30,9 @@ namespace Supernova.Graphics.Scenes
             fps = 1.0f / dt;
 
             txt = SNGlobal.Gameplay.Started ?
-                string.Format("{4} fps\n{0}\n{1}\n{2}\n{3} - {5}",
+                string.Format("{4} fps\n{0}\n{1}\n{2}\n{3} - {5}\n{6}",
                     SNGlobal.Gameplay.Position, SNGlobal.Gameplay.Beat, SNGlobal.Gameplay.BPM, SNGlobal.Gameplay.bgms.Count, fps,
-                    SNGlobal.Gameplay.Notes.Count)
+                    SNGlobal.Gameplay.Notes.Count, SNGlobal.Gameplay.NoteCount)
                 : "LOADING CHART...";
             //t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
         }
@@ -69,17 +69,19 @@ namespace Supernova.Graphics.Scenes
             // Draw notes
             if (SNGlobal.Gameplay.Started)
             {
-                for (int i = 0; i < SNGlobal.Gameplay.Notes.Count; i++)
+                for (int i = SNGlobal.Gameplay.NoteCount; i < SNGlobal.Gameplay.Notes.Count; i++)
                 {
                     var note = SNGlobal.Gameplay.Notes[i];
-                    float CalculatedY = (Engine.Height - SNGlobal.Theme.NoteYOffset) -
+                    float Stop = (Engine.Height - SNGlobal.Theme.NoteYOffset);
+                    float CalculatedY = Stop -
                                         ((note.Beat - SNGlobal.Gameplay.Beat) * SNGlobal.Theme.NoteHeight * (12));
-                    if (CalculatedY > -SNGlobal.Theme.NoteHeight && CalculatedY < (Engine.Height - SNGlobal.Theme.NoteYOffset))
+                    int ActualY = Math.Min((int)CalculatedY, (int)Stop);
+                    if (CalculatedY > -SNGlobal.Theme.NoteHeight)
                     {
                         var col = SNGlobal.Theme.ChartColours[(int)note.Column];
                         SetColour(col);
                         var X = SNGlobal.Theme.NoteXOffset + (SNGlobal.Theme.NoteWidth * note.Column);
-                        FillRect((int)X, (int)CalculatedY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
+                        FillRect((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
                     }
                 }
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MoonSharp.Interpreter;
+using Supernova.Shared;
 
 namespace Supernova.BMS
 {
@@ -35,6 +36,14 @@ namespace Supernova.BMS
                 int? j = Array.IndexOf(e, Channel);
                 if (j == -1) j = null;
                 return j;
+            }
+        }
+
+        public float Time
+        {
+            get
+            {
+                return Beat * (60 / SNGlobal.Gameplay.GetBPMAtBeat(Beat));
             }
         }
     }

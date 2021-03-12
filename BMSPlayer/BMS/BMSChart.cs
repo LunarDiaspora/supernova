@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MoonSharp.Interpreter;
+using Supernova.Gameplay;
 
 namespace Supernova.BMS
 {
@@ -37,6 +39,7 @@ namespace Supernova.BMS
         INSANE
     }
 
+    [MoonSharpUserData]
     public class BMSChart
     {
         //public static readonly float PULSE = 960f;
@@ -55,6 +58,8 @@ namespace Supernova.BMS
         public Dictionary<string, BMSSample> Samples = new();
 
         public Dictionary<string, List<BMSMeasure>> Measures = new();
+
+        public TimingWindowScale rank = TimingWindowScale.VERY_EASY;
 
         public BMSChart()
         {
