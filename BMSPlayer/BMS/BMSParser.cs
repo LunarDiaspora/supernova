@@ -80,7 +80,8 @@ namespace Supernova.BMS
                                 var c = cdata.Value[i..(i + 2)];
                                 var pulse = (step * i/2);
 
-                                var timeInside = ((60 / CurrentBPM) * pulse);
+                                //var timeInside = ((60 / CurrentBPM) * pulse);
+                                var timeInside = (((1 / CurrentBPM) * 60) * pulse);
                                 var time = CurrentTime + timeInside;
 
                                 if (c == "00") continue;
@@ -103,7 +104,7 @@ namespace Supernova.BMS
                             {
                                 if (measure != CurrentMeasure)
                                 {
-                                    var measureLength = ((60 / CurrentBPM) * 4); // #METER...
+                                    var measureLength = (((1 / CurrentBPM) * 60) * 4); // #METER...
                                     CurrentTime += measureLength;
                                     CurrentMeasure = measure;
                                 }
@@ -179,6 +180,8 @@ namespace Supernova.BMS
                             case "BPM":
                                 ch.initialBPM = float.Parse(data);
                                 CurrentBPM = ch.initialBPM;
+                                var ml = (((1 / CurrentBPM) * 60) * 4); // #METER...
+                                CurrentTime += ml;
                                 break;
                             case "RANK":
                                 ch.rank = TimingWindows.IntToWindow(int.Parse(data));

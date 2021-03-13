@@ -88,6 +88,14 @@ namespace Luminal.Core
                         case SDL.SDL_EventType.SDL_QUIT:
                             WinClose();
                             break;
+                        case SDL.SDL_EventType.SDL_KEYDOWN:
+                            var e = evt.key.keysym.scancode;
+                            WinKeyDown(e);
+                            break;
+                        case SDL.SDL_EventType.SDL_KEYUP:
+                            var k = evt.key.keysym.scancode;
+                            WinKeyUp(k);
+                            break;
                     }
                 }
 
@@ -122,14 +130,14 @@ namespace Luminal.Core
             Context.FreeAllImages();
         }
 
-        private void WinKeyDown()
+        private void WinKeyDown(SDL.SDL_Scancode scancode)
         {
-            sceneManager.ActiveScene.OnKeyDown(this);
+            sceneManager.ActiveScene.OnKeyDown(this, scancode);
         }
 
-        private void WinKeyUp()
+        private void WinKeyUp(SDL.SDL_Scancode scancode)
         {
-            sceneManager.ActiveScene.OnKeyUp(this);
+            sceneManager.ActiveScene.OnKeyUp(this, scancode);
         }
 
         private void WinClose()

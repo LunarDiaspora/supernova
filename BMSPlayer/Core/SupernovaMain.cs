@@ -9,18 +9,34 @@ using Supernova.Gameplay;
 using Supernova.Shared;
 using Supernova.Configuration;
 using Supernova.Scripting;
+using DiscordRPC;
+using DiscordRPC.Logging;
 
 namespace Supernova.Core
 {
     class SupernovaMain
     {
         public Engine engine;
+        public static DiscordRpcClient RPC;
+
+        public static readonly string SUPERNOVA_CLIENT_ID = "820302107026391060";
 
         public static string BaseTitle;
 
         public SupernovaMain(int wwidth = 1280, int wheight = 720, string wtitle = "Supernova")
         {
             SNGlobal.Config = SupernovaConfigLoader.LoadConfig("Supernova.json");
+
+            RPC = new DiscordRpcClient(SUPERNOVA_CLIENT_ID);
+            RPC.Logger = new ConsoleLogger()
+            {
+                Level = LogLevel.Warning
+            };
+
+            RPC.OnReady += (sender, e) =>
+            {
+                Console.WriteLine("Discord RPC: Ready on user {0}", e.User.Username);
+            };
 
             BaseTitle = wtitle;
             engine = new Engine();
@@ -35,6 +51,8 @@ namespace Supernova.Core
 
         void OnEngineLoading(Engine main)
         {
+            RPC.Initialize();
+
             Globals.LoadFont("standard", "Resources/standard.ttf", 16);
             Globals.LoadFont("monospace", "Resources/monospace.ttf", 24);
 
@@ -52,7 +70,7 @@ namespace Supernova.Core
 
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
             SNGlobal.Gameplay = new GameplayCore();
-            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
+            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_l.bme");
 
             main.sceneManager.SwitchScene("Main");
         }

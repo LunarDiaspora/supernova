@@ -66,7 +66,7 @@ namespace Supernova.Gameplay
 
             Chart = ch;
             bgms = Chart.GetAllEventsInChannel("01");
-            Notes = Chart.GetAllNotes();
+            Notes = Chart.GetAllNotes().OrderBy(e => e.Beat).ToList();
 
             BPM = Chart.initialBPM;
             
@@ -80,7 +80,19 @@ namespace Supernova.Gameplay
                 SNGlobal.Theme.OnChartLoaded();
             }
 
-            SDL.SDL_SetWindowTitle(Engine.Window, string.Format("{0} | {1} - {2}", SupernovaMain.BaseTitle, ch.artist, ch.title));
+            var properTitle = ch.title;
+            if (ch.subtitle != null)
+            {
+                properTitle = string.Format("{0} {1}", ch.title, ch.subtitle);
+            }
+
+            SupernovaMain.RPC.SetPresence(new DiscordRPC.RichPresence()
+            {
+                Details = string.Format("{0} - {1}", ch.artist, properTitle),
+                State = string.Format("{0} Lv. {1}", ch.difficulty, ch.playLevel == 0 ? "???" : ch.playLevel)
+            });
+
+            SDL.SDL_SetWindowTitle(Engine.Window, string.Format("{0} | {1} - {2}", SupernovaMain.BaseTitle, ch.artist, properTitle));
         }
 
         public void UpdateEngine(float Delta)
@@ -120,8 +132,8 @@ namespace Supernova.Gameplay
             foreach (var n in nn)
             {
                 //Chart.Samples[n.Event].Play();
-                JudgementCount[Judgement.POOR]++;
-                NoteCount++;
+                //ApplyJudgement(Judgement.POOR);
+                //NoteCount++;
             }
 
             //Notes.RemoveAll(t => t.Beat <= Beat);
@@ -129,9 +141,61 @@ namespace Supernova.Gameplay
             //var n = bgms.Where(t => t.Beat <= Beat);
         }
 
-        public float GetBPMAtBeat(float x)
+        public void JudgeKeycode(SDL.SDL_Scancode Code)
         {
-            return BPM; // FUCKING TEMP AS SHIT
+            var map = new[]
+            {
+                SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT,
+                SDL.SDL_Scancode.SDL_SCANCODE_A,
+                SDL.SDL_Scancode.SDL_SCANCODE_S,
+                SDL.SDL_Scancode.SDL_SCANCODE_D,
+                SDL.SDL_Scancode.SDL_SCANCODE_SPACE,
+                SDL.SDL_Scancode.SDL_SCANCODE_J,
+                SDL.SDL_Scancode.SDL_SCANCODE_K,
+                SDL.SDL_Scancode.SDL_SCANCODE_L
+            }.ToList();
+
+            var k = map.LastIndexOf(Code);
+            if (k != -1) JudgeInput(k);
+        }
+
+        public void JudgeInput(int Column)
+        {
+            // Column = 0 through 7. Or 15. Whatever.
+            var notesOnCol = Notes.Skip(NoteCount).Where(n => n.Column == Column);
+            // wait hold on
+            var closestNote = notesOnCol.First();
+            if (closestNote != null)
+            {
+                // we have a note
+                Chart.Samples[closestNote.Event].Play();
+                // now let's see the timing
+
+                var timingDelta = (Position - closestNote.Time);
+                Judgement judge = Judgement.EXTRA_POOR;
+                foreach (var j in TimingWindowMap)
+                {
+                    var time = j.Item2;
+                    if (timingDelta <= time && timingDelta >= -time)
+                    {
+                        judge = j.Item1;
+                        //break;
+                    }
+                }
+
+                if (judge != Judgement.EXTRA_POOR)
+                {
+                    NoteCount++;
+                }
+
+                ApplyJudgement(judge);
+            }
+        }
+
+        public void ApplyJudgement(Judgement j)
+        {
+            JudgementCount[j]++;
+            Console.WriteLine(j);
         }
 
         public IList<ChannelEvent> GetNotes() => Notes;

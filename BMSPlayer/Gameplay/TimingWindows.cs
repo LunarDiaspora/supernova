@@ -59,10 +59,10 @@ namespace Supernova.Gameplay
 
             foreach (var e in new[]
             {
-                Judgement.PERFECT_GREAT,
-                Judgement.GREAT,
+                Judgement.BAD,
                 Judgement.GOOD,
-                Judgement.BAD
+                Judgement.GREAT,
+                Judgement.PERFECT_GREAT
             })
             {
                 var t = JudgementToBaseTimingWindow(e);

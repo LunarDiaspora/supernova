@@ -2,7 +2,7 @@
 *---------------------- HEADER FIELD
 
 #PLAYER 1
-#GENRE P s y (一握りの神と星の数ほどのマゾプレイヤーのための)
+#GENRE P s y
 #TITLE G e n g a o z o - f o o n
 #ARTIST 455-38B / obj : k_f
 #BPM 153
@@ -10,6 +10,7 @@
 #RANK 2
 #TOTAL 600
 #STAGEFILE title.bmp
+#DIFFICULTY 3
 
 #WAV01 4 002.wav
 #WAV02 4 003.wav

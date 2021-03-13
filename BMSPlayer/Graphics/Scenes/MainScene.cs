@@ -76,12 +76,14 @@ namespace Supernova.Graphics.Scenes
                     float CalculatedY = Stop -
                                         ((note.Beat - SNGlobal.Gameplay.Beat) * SNGlobal.Theme.NoteHeight * (12));
                     int ActualY = Math.Min((int)CalculatedY, (int)Stop);
-                    if (CalculatedY > -SNGlobal.Theme.NoteHeight && note.Time >= SNGlobal.Gameplay.Position)
+                    if (CalculatedY > -SNGlobal.Theme.NoteHeight)
                     {
                         var col = SNGlobal.Theme.ChartColours[(int)note.Column];
                         SetColour(col);
                         var X = SNGlobal.Theme.NoteXOffset + (SNGlobal.Theme.NoteWidth * note.Column);
                         FillRect((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
+
+                        Globals.Fonts["monospace"].Draw($"{note.Time}", (int)X, ActualY);
                     }
                 }
             }
@@ -95,8 +97,12 @@ namespace Supernova.Graphics.Scenes
             }
         }
 
-        public override void OnKeyDown(Engine main)
+        public override void OnKeyDown(Engine main, SDL.SDL_Scancode sc)
         {
+            if (SNGlobal.Gameplay.Started)
+            {
+                SNGlobal.Gameplay.JudgeKeycode(sc);
+            }
         }
     }
 }

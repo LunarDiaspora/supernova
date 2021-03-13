@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SDL2;
 
 namespace Luminal.Graphics
 {
@@ -27,12 +28,12 @@ namespace Luminal.Graphics
             // Called when scene exited.
         }
 
-        public virtual void OnKeyDown(Engine main)
+        public virtual void OnKeyDown(Engine main, SDL.SDL_Scancode sc)
         {
             // Called when key is pressed.
         }
 
-        public virtual void OnKeyUp(Engine main)
+        public virtual void OnKeyUp(Engine main, SDL.SDL_Scancode sc)
         {
             // Called when key is released.
         }
