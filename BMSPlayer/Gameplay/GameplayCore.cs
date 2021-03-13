@@ -132,8 +132,8 @@ namespace Supernova.Gameplay
             foreach (var n in nn)
             {
                 //Chart.Samples[n.Event].Play();
-                //ApplyJudgement(Judgement.POOR);
-                //NoteCount++;
+                ApplyJudgement(Judgement.POOR);
+                NoteCount++;
             }
 
             //Notes.RemoveAll(t => t.Beat <= Beat);
@@ -186,9 +186,8 @@ namespace Supernova.Gameplay
                 if (judge != Judgement.EXTRA_POOR)
                 {
                     NoteCount++;
+                    ApplyJudgement(judge);
                 }
-
-                ApplyJudgement(judge);
             }
         }
 

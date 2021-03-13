@@ -74,7 +74,7 @@ namespace Supernova.Graphics.Scenes
                     var note = SNGlobal.Gameplay.Notes[i];
                     float Stop = (Engine.Height - SNGlobal.Theme.NoteYOffset);
                     float CalculatedY = Stop -
-                                        ((note.Beat - SNGlobal.Gameplay.Beat) * SNGlobal.Theme.NoteHeight * (12));
+                                        ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (36));
                     int ActualY = Math.Min((int)CalculatedY, (int)Stop);
                     if (CalculatedY > -SNGlobal.Theme.NoteHeight)
                     {
@@ -83,7 +83,7 @@ namespace Supernova.Graphics.Scenes
                         var X = SNGlobal.Theme.NoteXOffset + (SNGlobal.Theme.NoteWidth * note.Column);
                         FillRect((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
 
-                        Globals.Fonts["monospace"].Draw($"{note.Time}", (int)X, ActualY);
+                        //Globals.Fonts["monospace"].Draw($"{note.Time}", (int)X, ActualY);
                     }
                 }
             }

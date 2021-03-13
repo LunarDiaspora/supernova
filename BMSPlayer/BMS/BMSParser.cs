@@ -46,6 +46,13 @@ namespace Supernova.BMS
                         {
                             // we have a match
                             var measure = int.Parse(match.Groups[1].Value);
+                            if (measure != CurrentMeasure && measure > CurrentMeasure)
+                            {
+                                Console.WriteLine($"Incrementing measure ({CurrentMeasure} -> {measure})");
+                                var measureLength = (((1 / CurrentBPM) * 60) * 4); // #METER...
+                                CurrentTime += measureLength;
+                                CurrentMeasure = measure;
+                            }
                             var channel = match.Groups[2].Value.ToLower();
                             var cdata = match.Groups[3];
                             if ((cdata.Length % 2) != 0)
@@ -102,12 +109,6 @@ namespace Supernova.BMS
 
                             if (current == null)
                             {
-                                if (measure != CurrentMeasure)
-                                {
-                                    var measureLength = (((1 / CurrentBPM) * 60) * 4); // #METER...
-                                    CurrentTime += measureLength;
-                                    CurrentMeasure = measure;
-                                }
 
                                 ch.Measures[channel].Add(meobj);
                             }
@@ -181,7 +182,7 @@ namespace Supernova.BMS
                                 ch.initialBPM = float.Parse(data);
                                 CurrentBPM = ch.initialBPM;
                                 var ml = (((1 / CurrentBPM) * 60) * 4); // #METER...
-                                CurrentTime += ml;
+                                //CurrentTime += ml;
                                 break;
                             case "RANK":
                                 ch.rank = TimingWindows.IntToWindow(int.Parse(data));
