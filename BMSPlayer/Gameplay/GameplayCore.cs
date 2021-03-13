@@ -53,6 +53,11 @@ namespace Supernova.Gameplay
             var cw = new ChartLoadingWorker();
             cw.OnChartDoneLoading += _Start;
             cw.StartLoadingChart(path);
+
+            foreach (var j in Enum.GetValues(typeof(Judgement)))
+            {
+                JudgementCount[(Judgement)j] = 0;
+            };
         }
 
         void _Start(BMSChart ch)

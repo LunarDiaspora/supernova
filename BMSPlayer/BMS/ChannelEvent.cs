@@ -21,6 +21,8 @@ namespace Supernova.BMS
                 // We'll worry about #METER... later. Not now.
             }
         }
+        public float Time = 0f;
+
         public float Measure = 0;
         public string Event = "00";
         public string Channel = "00";
@@ -39,12 +41,12 @@ namespace Supernova.BMS
             }
         }
 
-        public float Time
-        {
-            get
-            {
-                return Beat * (60 / SNGlobal.Gameplay.GetBPMAtBeat(Beat));
-            }
-        }
+        //public float Time
+        //{
+        //    get
+        //    {
+        //        return Beat * (60 / SNGlobal.Gameplay.GetBPMAtBeat(Beat));
+        //    }
+        //}
     }
 }

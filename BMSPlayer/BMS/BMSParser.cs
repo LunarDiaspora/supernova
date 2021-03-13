@@ -24,6 +24,11 @@ namespace Supernova.BMS
             }
             var ch = new BMSChart();
 
+            var CurrentTime = 0f;
+            var CurrentBPM = 130f; // "Definition of BPM.(Beat Per Minite) at the top of music. default : 130" - Urao Yane
+
+            var CurrentMeasure = 0;
+
             using (FileStream f = File.Open(path, FileMode.Open, FileAccess.Read))
             {
                 using (StreamReader sr = new StreamReader(f))
@@ -73,7 +78,10 @@ namespace Supernova.BMS
                             for (var i=0; i<cdata.Length; i+=2)
                             {
                                 var c = cdata.Value[i..(i + 2)];
-                                var pulse = (step * ((i/2)));
+                                var pulse = (step * i/2);
+
+                                var timeInside = ((60 / CurrentBPM) * pulse);
+                                var time = CurrentTime + timeInside;
 
                                 if (c == "00") continue;
 
@@ -82,7 +90,8 @@ namespace Supernova.BMS
                                     BeatInMeasure = pulse,
                                     Channel = channel,
                                     Event = c,
-                                    Measure = measure
+                                    Measure = measure,
+                                    Time = time
                                 };
 
                                 meobj.events.Add(evt);
@@ -90,7 +99,17 @@ namespace Supernova.BMS
 
                             if (meobj.events.Count == 0) continue; // what the fuck?
 
-                            if (current == null) ch.Measures[channel].Add(meobj);
+                            if (current == null)
+                            {
+                                if (measure != CurrentMeasure)
+                                {
+                                    var measureLength = ((60 / CurrentBPM) * 4); // #METER...
+                                    CurrentTime += measureLength;
+                                    CurrentMeasure = measure;
+                                }
+
+                                ch.Measures[channel].Add(meobj);
+                            }
 
                             // This is not going to be a command so
                             continue;
@@ -159,6 +178,7 @@ namespace Supernova.BMS
                                 break;
                             case "BPM":
                                 ch.initialBPM = float.Parse(data);
+                                CurrentBPM = ch.initialBPM;
                                 break;
                             case "RANK":
                                 ch.rank = TimingWindows.IntToWindow(int.Parse(data));

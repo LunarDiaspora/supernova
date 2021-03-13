@@ -76,7 +76,7 @@ namespace Supernova.Graphics.Scenes
                     float CalculatedY = Stop -
                                         ((note.Beat - SNGlobal.Gameplay.Beat) * SNGlobal.Theme.NoteHeight * (12));
                     int ActualY = Math.Min((int)CalculatedY, (int)Stop);
-                    if (CalculatedY > -SNGlobal.Theme.NoteHeight)
+                    if (CalculatedY > -SNGlobal.Theme.NoteHeight && note.Time >= SNGlobal.Gameplay.Position)
                     {
                         var col = SNGlobal.Theme.ChartColours[(int)note.Column];
                         SetColour(col);
