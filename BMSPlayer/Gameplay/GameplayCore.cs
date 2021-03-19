@@ -48,6 +48,8 @@ namespace Supernova.Gameplay
         public int NoteCount = 0;
         public int BgmFrameCount = 0;
 
+        public bool Autoplay = true;
+
         public void LoadGameplay(string path)
         {
             var cw = new ChartLoadingWorker();
@@ -129,10 +131,20 @@ namespace Supernova.Gameplay
 
             bgms.RemoveAll(t => t.Beat <= Beat);
 
+            if (Autoplay)
+            {
+                var c = h.Where(t => t.Time <= Position);
+                foreach (var l in c)
+                {
+                    HitNote(l);
+                }
+            }
+
             foreach (var n in nn)
             {
                 //Chart.Samples[n.Event].Play();
-                ApplyJudgement(Judgement.POOR);
+                if (!Autoplay) ApplyJudgement(Judgement.POOR); // We'll just ignore that
+                //else HitNote(n);
                 NoteCount++;
             }
 
@@ -161,33 +173,39 @@ namespace Supernova.Gameplay
 
         public void JudgeInput(int Column)
         {
+            if (Autoplay) return;
             // Column = 0 through 7. Or 15. Whatever.
             var notesOnCol = Notes.Skip(NoteCount).Where(n => n.Column == Column);
             // wait hold on
             var closestNote = notesOnCol.First();
             if (closestNote != null)
             {
-                // we have a note
-                Chart.Samples[closestNote.Event].Play();
-                // now let's see the timing
+                HitNote(closestNote);
+            }
+        }
 
-                var timingDelta = (Position - closestNote.Time);
-                Judgement judge = Judgement.EXTRA_POOR;
-                foreach (var j in TimingWindowMap)
-                {
-                    var time = j.Item2;
-                    if (timingDelta <= time && timingDelta >= -time)
-                    {
-                        judge = j.Item1;
-                        //break;
-                    }
-                }
+        public void HitNote(ChannelEvent closestNote)
+        {
+            // we have a note
+            Chart.Samples[closestNote.Event].Play();
+            // now let's see the timing
 
-                if (judge != Judgement.EXTRA_POOR)
+            var timingDelta = (Position - closestNote.Time);
+            Judgement judge = Judgement.EXTRA_POOR;
+            foreach (var j in TimingWindowMap)
+            {
+                var time = j.Item2;
+                if (timingDelta <= time && timingDelta >= -time)
                 {
-                    NoteCount++;
-                    ApplyJudgement(judge);
+                    judge = j.Item1;
+                    //break;
                 }
+            }
+
+            if (judge != Judgement.EXTRA_POOR)
+            {
+                NoteCount++;
+                ApplyJudgement(judge);
             }
         }
 
