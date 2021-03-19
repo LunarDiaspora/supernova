@@ -10,6 +10,7 @@ using MoonSharp.Interpreter;
 using SDL2;
 using Luminal.Core;
 using Supernova.Core;
+using Supernova.Scripting.API;
 
 namespace Supernova.Gameplay
 {
@@ -49,6 +50,11 @@ namespace Supernova.Gameplay
         public int BgmFrameCount = 0;
 
         public bool Autoplay = true;
+
+        public int Combo = 0;
+        public int MaxCombo = 0;
+
+        public int EXScore = 0;
 
         public void LoadGameplay(string path)
         {
@@ -211,8 +217,36 @@ namespace Supernova.Gameplay
 
         public void ApplyJudgement(Judgement j)
         {
+            switch (j)
+            {
+                case Judgement.PERFECT_GREAT:
+                    EXScore += 2;
+                    Combo++;
+                    break;
+                case Judgement.GREAT:
+                    EXScore += 1;
+                    Combo++;
+                    break;
+                case Judgement.GOOD:
+                    Combo++;
+                    break;
+                case Judgement.BAD:
+                case Judgement.POOR:
+                    Combo = 0;
+                    break;
+            }
+
             JudgementCount[j]++;
-            Console.WriteLine(j);
+            //Console.WriteLine(j);
+
+            if (SNGlobal.Theme != null)
+            {
+                var t = new JudgementData()
+                {
+                    judgement = (int)j
+                };
+                SNGlobal.Theme.OnJudgement(t);
+            }
         }
 
         public IList<ChannelEvent> GetNotes() => Notes;

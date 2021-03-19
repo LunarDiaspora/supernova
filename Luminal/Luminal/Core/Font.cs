@@ -35,7 +35,7 @@ namespace Luminal.Core
 
             SDL_ttf.TTF_SizeUTF8(FontPointer, Text, out rect.w, out rect.h);
 
-            IntPtr sur = SDL_ttf.TTF_RenderUTF8_Shaded(FontPointer, Text, Context.Colour, Context.TransparentBlack);
+            IntPtr sur = SDL_ttf.TTF_RenderUTF8_Blended(FontPointer, Text, Context.Colour);
             // SDL_Surface*
             //SDL.SDL_BlitSurface(sur, IntPtr.Zero, Engine.Renderer, ref rect);
             IntPtr tex = SDL.SDL_CreateTextureFromSurface(Engine.Renderer, sur);
@@ -43,6 +43,17 @@ namespace Luminal.Core
             SDL.SDL_RenderFlush(Engine.Renderer);
             SDL.SDL_FreeSurface(sur);
             SDL.SDL_DestroyTexture(tex);
+        }
+
+        public void GetDimensions(string Text, out int Width, out int Height)
+        {
+            if (!Engine.WindowOpen)
+            {
+                Width = 1;
+                Height = 1;
+                return;
+            }
+            SDL_ttf.TTF_SizeUTF8(FontPointer, Text, out Width, out Height);
         }
 
         public void Draw(string Text, int x = 0, int y = 0)

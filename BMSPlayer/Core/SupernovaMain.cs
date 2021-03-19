@@ -70,7 +70,7 @@ namespace Supernova.Core
 
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
             SNGlobal.Gameplay = new GameplayCore();
-            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_l.bme");
+            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
 
             main.sceneManager.SwitchScene("Main");
         }

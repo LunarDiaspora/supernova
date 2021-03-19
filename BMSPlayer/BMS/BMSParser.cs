@@ -48,7 +48,7 @@ namespace Supernova.BMS
                             var measure = int.Parse(match.Groups[1].Value);
                             if (measure != CurrentMeasure && measure > CurrentMeasure)
                             {
-                                Console.WriteLine($"Incrementing measure ({CurrentMeasure} -> {measure})");
+                                //Console.WriteLine($"Incrementing measure ({CurrentMeasure} -> {measure})");
                                 var measureLength = (((1 / CurrentBPM) * 60) * 4); // #METER...
                                 CurrentTime += measureLength;
                                 CurrentMeasure = measure;

@@ -140,5 +140,10 @@ namespace Supernova.Scripting
         {
             CallFunction("DrawAfterNotes");
         }
+
+        public void OnJudgement(JudgementData j)
+        {
+            CallFunction("OnJudgement", j);
+        }
     }
 }

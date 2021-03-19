@@ -5,13 +5,6 @@ Theme = {
 local h = SN_LoadImage("Themes/Default/key.png")
 local mh = false
 
-function OnUpdate(dt)
-end
-
-function OnStart()
-
-end
-
 Theme.NoteYOffset = 150
 Theme.NoteXOffset = 250
 Theme.NoteWidth = 60
@@ -28,6 +21,9 @@ Theme.NoteColours = {
     COLOUR_WHITE, COLOUR_BLUE,
     COLOUR_WHITE
 }
+
+local judgeTimer = 0
+local judgeString = ""
 
 function OnDraw()
     local gp = SN_GetGameplay()
@@ -52,6 +48,10 @@ function OnDraw()
         local diffText = tostring(gp.Chart.difficulty) .. " Lv. " .. (gp.Chart.playLevel or "???")
         SN_DrawText(title, Theme.NoteXOffset, (720-Theme.NoteYOffset)+30)
         SN_DrawText(diffText, Theme.NoteXOffset, (720-Theme.NoteYOffset)+65)
+
+        local infoText = "EX-Score: "..tostring(gp.EXScore)
+        SN_DrawText(infoText, Theme.NoteXOffset, (720-Theme.NoteYOffset)+100)
+
     end
 
     --if gp.Started then
@@ -63,23 +63,40 @@ function OnDraw()
     --h.Draw(300, 150)
 end
 
---function OnChartLoad()
---    notes = SN_GetNotes()
---end
-
---[[
-function DrawNote(v)
-    local gp = SN_GetGameplay()
-
-    if v.Column then
-        local cl = cols[v.Column]
-        if cl then
-            local CalculatedY = (720-offset)-((v.Beat-gp.Beat)*nh*(12))
-            if CalculatedY > -nh then
-                SN_SetDrawColour(cl[1], cl[2], cl[3], 255)
-                SN_DrawFilledRect((nw*v.Column)+xoffset, CalculatedY, nw, nh)
-            end
-        end
+function DrawAfterNotes()
+    if judgeTimer < 1 then
+        SN_SetFont("monospace")
+        local dim = SN_GetTextDimensions(judgeString)
+        local totalWidth = Theme.NoteWidth * 8
+        local half = totalWidth / 2
+        local x = half - (dim.w / 2)
+        SN_DrawText(judgeString, Theme.NoteXOffset + x, (720-Theme.NoteYOffset)-100)
     end
 end
-]]
+
+function OnUpdate(dt)
+    judgeTimer = judgeTimer + dt
+end
+
+local judgestrings = {
+    [0] = "Great!",
+    "Great",
+    "Good",
+    "Bad",
+    "Poor",
+    "Poor"
+}
+
+function OnJudgement(j)
+    local g = SN_GetGameplay()
+    local m = judgestrings[j.judgement]
+    if g.combo >= 1 then
+        m = m .. " " .. tostring(g.combo)
+    end
+    judgeString = m
+    judgeTimer = 0
+end
+
+function OnStart()
+
+end
