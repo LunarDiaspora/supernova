@@ -1,6 +1,7 @@
 ﻿using System;
 using Luminal.Modular;
 using Luminal.Audio;
+using Luminal.Logging;
 using FmodAudio;
 
 namespace LuminalFMODCoreEngine
@@ -18,13 +19,13 @@ namespace LuminalFMODCoreEngine
 
         public override void Initialise()
         {
-            Console.WriteLine("FmodCore audio engine initialising");
+            Log.Warn("FmodCore audio engine initialising");
             system.Init(999);
         }
 
         public override void Dispose()
         {
-            Console.WriteLine("FmodCore audio engine disposing");
+            Log.Warn("FmodCore audio engine disposing");
             closing = true;
             system.Dispose();
         }

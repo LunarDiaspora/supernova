@@ -29,21 +29,29 @@ namespace Supernova.Scripting
 
         public List<Colour> ChartColours = new();
 
-        public ThemeManager(string path)
+        public string _Text;
+
+        public ThemeManager(string path, bool init = true)
         {
             UserData.RegistrationPolicy = InteropRegistrationPolicy.Automatic;
 
             script = new Script();
             var f = File.ReadAllText(path);
+            _Text = f;
             FunctionMap = LuaFunctionFinder.FindLuaFunctions();
 
             foreach (var (name, value) in FunctionMap)
             {
-                Console.WriteLine($"Registering {name}");
+                //Console.WriteLine($"Registering {name}");
                 script.Globals[name] = value.GetFunc();
             }
 
-            script.DoString(f);
+            if (init) _Initialise();
+        }
+
+        public void _Initialise()
+        {
+            script.DoString(_Text);
 
             CallFunction("OnStart");
 
@@ -53,7 +61,7 @@ namespace Supernova.Scripting
 
             var ctable = ThemeTable.Get("NoteColours").Table;
             var t = ctable.Values.ToList();
-            for (int i=0; i<t.Count; i++)
+            for (int i = 0; i < t.Count; i++)
             {
                 var val = t[i];
                 var tab = val.Table;
@@ -77,15 +85,15 @@ namespace Supernova.Scripting
             NoteWidth = (int)ThemeTable.Get("NoteWidth").Number;
             NoteHeight = (int)ThemeTable.Get("NoteHeight").Number;
         }
-        
-        public static ThemeManager LoadTheme(string name)
+
+        public static ThemeManager LoadTheme(string name, bool init = true)
         {
             var snthemePath = string.Format("Themes/{0}/{0}.sntheme", name);
             var longPath = Path.GetFullPath(snthemePath);
             var snThemeFile = SnthemeReader.ReadSntheme(longPath);
             var themeDir = Path.GetDirectoryName(longPath);
             var entry = Path.Combine(themeDir, snThemeFile.Entrypoint);
-            var m = new ThemeManager(entry);
+            var m = new ThemeManager(entry, init);
             m.ThemeDirectory = themeDir;
             return m;
         }

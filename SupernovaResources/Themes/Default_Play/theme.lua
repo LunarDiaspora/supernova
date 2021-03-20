@@ -1,8 +1,8 @@
 Theme = {
-    Name = "Default Theme"
+    Name = "Default Play Theme"
 }
 
-local h = SN_LoadImage("Themes/Default/key.png")
+local h = SN_LoadImage("Themes/Default_Play/key.png")
 local mh = false
 
 Theme.NoteYOffset = 150

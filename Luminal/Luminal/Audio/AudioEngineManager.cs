@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using Luminal.Modular;
+using Luminal.Logging;
 
 namespace Luminal.Audio
 {
@@ -21,7 +22,7 @@ namespace Luminal.Audio
                 if (attrs.Length > 1) throw new ArgumentOutOfRangeException($"Expecting 1 LuminalAudioModule on class {t.Name}, but found {attrs.Length}.");
                 if (attrs.Length == 1)
                 {
-                    Console.WriteLine($"Luminal: Loading {t.Name} as audio engine");
+                    Log.Info($"Luminal: Loading {t.Name} as audio engine");
                     ae = (GenericAudioEngine)Activator.CreateInstance(t, 44100);
                     break;
                 }

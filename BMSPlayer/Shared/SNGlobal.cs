@@ -15,6 +15,22 @@ namespace Supernova.Shared
         public static GameplayCore Gameplay;
         public static SupernovaConfig Config;
         public static ThemeManager Theme;
+
+        public static Dictionary<string, ThemeManager> Themes = new();
+
+        public static ThemeManager LoadTheme(string Key, string Name)
+        {
+            var t = ThemeManager.LoadTheme(Name, false);
+            Themes[Key] = t;
+            return t;
+        }
+
+        public static void SwitchTheme(string Key)
+        {
+            Theme = Themes[Key];
+            Theme._Initialise();
+        } 
+
         public static BMSChart Chart;
     }
 }

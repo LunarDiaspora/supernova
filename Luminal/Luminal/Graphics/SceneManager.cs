@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using Luminal.Logging;
 
 namespace Luminal.Graphics
 {
@@ -30,7 +31,7 @@ namespace Luminal.Graphics
                 {
                     SceneDefinition sd = (SceneDefinition)attrs[0];
                     Scene sc = (Scene)Activator.CreateInstance(i);
-                    Console.WriteLine($"Loading scene {sd.name} of type {sc.GetType().Name}");
+                    Log.Info($"Loading scene {sd.name} of type {sc.GetType().Name}");
                     Scenes.Add(sd.name, sc);
                 }
             }

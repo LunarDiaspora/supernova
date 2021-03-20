@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Supernova.Scripting.API;
 using System.Reflection;
+using Luminal.Logging;
 
 namespace Supernova.Scripting
 {
@@ -22,7 +23,7 @@ namespace Supernova.Scripting
                 if (attrs.Length == 1)
                 {
                     var attr = (ExposeToLua)attrs[0];
-                    Console.WriteLine($"Creating Lua function {attr.Name} from class {t.Name}");
+                    Log.Debug($"Creating Lua function {attr.Name} from class {t.Name}");
                     var fn = (LuaFunction)Activator.CreateInstance(t);
                     n.Add(attr.Name, fn);
                 }

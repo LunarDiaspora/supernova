@@ -7,6 +7,7 @@ using System.Text;
 using Luminal.Configuration;
 using SDL2;
 using SFML.System;
+using Luminal.Logging;
 
 namespace Luminal.Core
 {
@@ -35,9 +36,15 @@ namespace Luminal.Core
         public static int Width;
         public static int Height;
 
+        public Engine()
+        {
+            var logger = new ConsoleLogger();
+            Log.SetLogger(logger);
+        }
+
         public void StartRenderer(int WindowWidth, int WindowHeight, string WindowTitle, Type executingType)
         {
-            Console.WriteLine($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
+            Log.Info($"--- Luminal Engine ---\nStarting at {WindowWidth} x {WindowHeight} (\"{WindowTitle}\")\nExecuting application: {executingType.Name}\n");
 
             Width = WindowWidth;
             Height = WindowHeight;
@@ -54,10 +61,10 @@ namespace Luminal.Core
 
             Context.SetColour(255, 255, 255, 255);
 
-            Console.WriteLine("Loading SDL2_ttf");
+            Log.Info("Loading SDL2_ttf");
             SDL_ttf.TTF_Init();
 
-            Console.WriteLine("Loading SDL2_image");
+            Log.Info("Loading SDL2_image");
             SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_JPG | SDL_image.IMG_InitFlags.IMG_INIT_PNG |
                                SDL_image.IMG_InitFlags.IMG_INIT_TIF | SDL_image.IMG_InitFlags.IMG_INIT_WEBP);
 

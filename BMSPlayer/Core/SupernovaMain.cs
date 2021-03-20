@@ -11,6 +11,7 @@ using Supernova.Configuration;
 using Supernova.Scripting;
 using DiscordRPC;
 using DiscordRPC.Logging;
+using Luminal.Logging;
 using Supernova.Disk;
 
 namespace Supernova.Core
@@ -29,14 +30,14 @@ namespace Supernova.Core
             SNGlobal.Config = SupernovaConfigLoader.LoadConfig("Supernova.json");
 
             RPC = new DiscordRpcClient(SUPERNOVA_CLIENT_ID);
-            RPC.Logger = new ConsoleLogger()
+            RPC.Logger = new DiscordRPC.Logging.ConsoleLogger()
             {
-                Level = LogLevel.Warning
+                Level = DiscordRPC.Logging.LogLevel.Warning
             };
 
             RPC.OnReady += (sender, e) =>
             {
-                Console.WriteLine("Discord RPC: Ready on user {0}", e.User.Username);
+                Log.Info("Discord RPC: Ready on user {0}", e.User.Username);
             };
 
             BaseTitle = wtitle;
@@ -46,6 +47,14 @@ namespace Supernova.Core
             engine.OnFinishedLoad += OnEngineLoad;
             engine.OnUpdate += OnEngineUpdate;
             engine.OnDraw += OnEngineDraw;
+
+            // Logger test
+            //Log.Debug("Debug level");
+            //Log.Info("Info level");
+            //Log.Warn("Warning level");
+            //Log.Error("Error level");
+            //Log.Fatal("Critical level!");
+            //Log.Wtf("'Something very wrong has happened' level!");
 
             engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain));
         }
@@ -58,16 +67,23 @@ namespace Supernova.Core
             Globals.LoadFont("monospace", "Resources/monospace.ttf", 24);
 
             var a = Context.LoadImage("test", "Themes/Default/key.png");
-            Console.WriteLine(a);
+            //Log.Debug("{0}", a);
         }
 
         void OnEngineLoad(Engine main)
         {
-            Console.WriteLine("Supernova has loaded! Let's begin!");
-            Console.WriteLine($"Loading theme {SNGlobal.Config.Theme}...");
+            Log.Info("Supernova has loaded! Let's begin!");
 
-            SNGlobal.Theme = ThemeManager.LoadTheme(SNGlobal.Config.Theme);
-            Console.WriteLine($"Lua loaded: theme name = {SNGlobal.Theme.Name}");
+            foreach (var (key, theme) in SNGlobal.Config.Theme)
+            {
+                Log.Debug($"Theme '{key}' = {theme}");
+
+                SNGlobal.LoadTheme(key, theme);
+                Log.Debug($"Theme '{key}' loaded successfully, but not initialised yet.");
+            }
+
+            SNGlobal.SwitchTheme("Play");
+            Log.Debug($"Lua: Play theme name is '{SNGlobal.Theme.Name}'.");
 
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
             SNGlobal.Gameplay = new GameplayCore();

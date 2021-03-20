@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Supernova.Core;
+using Luminal.Logging;
 
 namespace Supernova
 {
