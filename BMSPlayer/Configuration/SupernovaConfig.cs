@@ -9,5 +9,6 @@ namespace Supernova.Configuration
     public class SupernovaConfig
     {
         public string Theme { get; set; }
+        public List<string> SongPaths { get; set; }
     }
 }

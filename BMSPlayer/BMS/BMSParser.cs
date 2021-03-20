@@ -7,6 +7,7 @@ using System.IO;
 using Luminal.Audio;
 using System.Text.RegularExpressions;
 using Supernova.Gameplay;
+using System.Security.Cryptography;
 
 namespace Supernova.BMS
 {
@@ -16,7 +17,15 @@ namespace Supernova.BMS
             @"#(\d{3})([0-9a-zA-Z]{2}):([0-9A-Za-z]{2,})", RegexOptions.Compiled
         );
 
-        public static BMSChart ParseBMSChart(string path)
+        public static string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
+
+        public static BMSChart ParseBMSChart(string path, bool dontLoadAudio = false)
         {
             if (!File.Exists(path))
             {
@@ -31,6 +40,18 @@ namespace Supernova.BMS
 
             using (FileStream f = File.Open(path, FileMode.Open, FileAccess.Read))
             {
+                var sha = SHA256.Create();
+                var shaHash = sha.ComputeHash(f);
+                ch.SHA256_Hash = ByteArrayToString(shaHash).ToLower();
+                f.Position = 0;
+                sha.Dispose();
+
+                var md5 = MD5.Create();
+                var md5Hash = md5.ComputeHash(f);
+                ch.MD5_Hash = ByteArrayToString(md5Hash).ToLower();
+                f.Position = 0;
+                md5.Dispose();
+
                 using (StreamReader sr = new StreamReader(f))
                 {
                     string line;
@@ -131,15 +152,17 @@ namespace Supernova.BMS
                             string bp = Path.Combine(dir, data);
                             //string p = Path.GetFullPath(bp);
                             string p = bp.Replace("\\", "/"); // naughty
-                            //Console.WriteLine($"{chan} : {p}");
-
-                            BMSSample smp = new BMSSample(chan, p);
-                            ch.Samples.Add(chan, smp);
-
+                            ch.SamplePaths[chan] = p;
+                            if (!dontLoadAudio)
+                            {
+                                BMSSample smp = new BMSSample(chan, p);
+                                ch.Samples[chan] = smp;
+                                ch.samplesLoaded = true;
+                            }
                             continue;
                         }
 
-                        
+
 
                         switch (command.ToUpper())
                         {
@@ -172,8 +195,13 @@ namespace Supernova.BMS
                                 }
                                 break;
                             case "DIFFICULTY":
-                                Console.WriteLine(data);
-                                ch.difficulty = (Difficulty)int.Parse(data);
+                                try
+                                {
+                                    ch.difficulty = (Difficulty)int.Parse(data);
+                                } catch
+                                {
+                                    ch.difficulty = Difficulty.INSANE;
+                                }
                                 break;
                             case "TOTAL":
                                 ch.total = float.Parse(data);
@@ -181,7 +209,7 @@ namespace Supernova.BMS
                             case "BPM":
                                 ch.initialBPM = float.Parse(data);
                                 CurrentBPM = ch.initialBPM;
-                                var ml = (((1 / CurrentBPM) * 60) * 4); // #METER...
+                                //var ml = (((1 / CurrentBPM) * 60) * 4); // #METER...
                                 //CurrentTime += ml;
                                 break;
                             case "RANK":

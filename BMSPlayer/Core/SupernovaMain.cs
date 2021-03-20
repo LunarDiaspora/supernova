@@ -11,6 +11,7 @@ using Supernova.Configuration;
 using Supernova.Scripting;
 using DiscordRPC;
 using DiscordRPC.Logging;
+using Supernova.Disk;
 
 namespace Supernova.Core
 {
@@ -70,7 +71,9 @@ namespace Supernova.Core
 
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
             SNGlobal.Gameplay = new GameplayCore();
-            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
+            //SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
+
+            ChartFinder.FindCharts();
 
             main.sceneManager.SwitchScene("Main");
         }
