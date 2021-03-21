@@ -65,6 +65,12 @@ namespace Luminal.Logging
 
         public void Log(string msg, LogLevel ll)
         {
+            var intlevel = (int)ll;
+            if (intlevel < Logging.Log.MinLevel)
+            {
+                return;
+            }
+
             var fmt = Formats[ll];
             var s = msg.Split("\n");
             foreach (var l in s)

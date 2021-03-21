@@ -1,5 +1,6 @@
 Theme = {
-    Name = "Default Play Theme"
+    Name = "Default Play Theme",
+    Style = "Play"
 }
 
 local h = SN_LoadImage("Themes/Default_Play/key.png")
@@ -36,7 +37,7 @@ function OnDraw()
     --SN_DrawText("poggers", 300, 300)
 
     SN_SetDrawColour(214, 15, 15, 128)
-    SN_DrawFilledRect(Theme.NoteXOffset,(720-Theme.NoteYOffset),8*Theme.NoteWidth,Theme.NoteHeight)
+    --SN_DrawFilledRect(Theme.NoteXOffset,(720-Theme.NoteYOffset),8*Theme.NoteWidth,Theme.NoteHeight)
 
     if gp.Started then
         SN_SetDrawColour(255, 255, 255, 255)

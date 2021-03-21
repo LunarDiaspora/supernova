@@ -36,10 +36,11 @@ namespace Luminal.Core
         public static int Width;
         public static int Height;
 
-        public Engine()
+        public Engine(int logLevel = 0)
         {
             var logger = new ConsoleLogger();
             Log.SetLogger(logger);
+            Log.SetLogLevel(logLevel);
         }
 
         public void StartRenderer(int WindowWidth, int WindowHeight, string WindowTitle, Type executingType)

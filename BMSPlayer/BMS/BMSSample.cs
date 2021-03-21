@@ -5,11 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Luminal.Audio;
 using Supernova.Core;
-using MoonSharp.Interpreter;
 
 namespace Supernova.BMS
 {
-    [MoonSharpUserData]
     public class BMSSample
     {
         public string Channel = "00"; // 00-zz

@@ -66,40 +66,43 @@ namespace Supernova.Graphics.Scenes
 
             SDL.SDL_SetRenderDrawBlendMode(Engine.Renderer, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
 
-            // Draw notes
-            if (SNGlobal.Gameplay.Started)
+            if (SupernovaMain.State == SupernovaState.PLAY)
             {
-                for (int i = SNGlobal.Gameplay.NoteCount; i < SNGlobal.Gameplay.Notes.Count; i++)
+                // Draw notes
+                if (SNGlobal.Gameplay.Started)
                 {
-                    var note = SNGlobal.Gameplay.Notes[i];
-                    float Stop = (Engine.Height - SNGlobal.Theme.NoteYOffset);
-                    float CalculatedY = Stop -
-                                        ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (36));
-                    int ActualY = Math.Min((int)CalculatedY, (int)Stop);
-                    if (CalculatedY > -SNGlobal.Theme.NoteHeight)
+                    for (int i = SNGlobal.Gameplay.NoteCount; i < SNGlobal.Gameplay.Notes.Count; i++)
                     {
-                        var col = SNGlobal.Theme.ChartColours[(int)note.Column];
-                        SetColour(col);
-                        var X = SNGlobal.Theme.NoteXOffset + (SNGlobal.Theme.NoteWidth * note.Column);
-                        FillRect((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
+                        var note = SNGlobal.Gameplay.Notes[i];
+                        float Stop = (Engine.Height - SNGlobal.Theme.NoteYOffset);
+                        float CalculatedY = Stop -
+                                            ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (36));
+                        int ActualY = Math.Min((int)CalculatedY, (int)Stop);
+                        if (CalculatedY > -SNGlobal.Theme.NoteHeight)
+                        {
+                            var col = SNGlobal.Theme.ChartColours[(int)note.Column];
+                            SetColour(col);
+                            var X = SNGlobal.Theme.NoteXOffset + (SNGlobal.Theme.NoteWidth * note.Column);
+                            FillRect((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
 
-                        //Globals.Fonts["monospace"].Draw($"{note.Time}", (int)X, ActualY);
+                            //Globals.Fonts["monospace"].Draw($"{note.Time}", (int)X, ActualY);
+                        }
                     }
                 }
-            }
 
-            Context.SetColour(255, 255, 255, 255);
-            Globals.Fonts["monospace"].Draw(txt);
+                Context.SetColour(255, 255, 255, 255);
+                Globals.Fonts["monospace"].Draw(txt);
 
-            if (SNGlobal.Theme != null)
-            {
-                SNGlobal.Theme.DrawAfterNotes();
+                if (SNGlobal.Theme != null)
+                {
+                    SNGlobal.Theme.DrawAfterNotes();
+                }
             }
         }
 
         public override void OnKeyDown(Engine main, SDL.SDL_Scancode sc)
         {
-            if (SNGlobal.Gameplay.Started)
+            if (SNGlobal.Gameplay.Started && SupernovaMain.State == SupernovaState.PLAY)
             {
                 SNGlobal.Gameplay.JudgeKeycode(sc);
             }

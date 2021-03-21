@@ -4,20 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Luminal.Core;
-using MoonSharp.Interpreter;
 
 namespace Supernova.Scripting.API
 {
     [ExposeToLua("SN_DrawText")]
-    class DrawTextFunction : LuaFunction
+    class DrawTextFunction
     {
-        public override DynValue Execute(params DynValue[] args)
+        public void Execute(string text, int x, int y)
         {
-            var x = (int)args[1].Number;
-            var y = (int)args[2].Number;
-            var text = args[0].String;
             Globals.Fonts[Context.CurrentFont].Draw(text, x, y);
-            return null;
         }
+
+        public Action<string, int, int> GetFunc => Execute;
     }
 }

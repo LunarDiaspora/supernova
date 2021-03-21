@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MoonSharp.Interpreter;
 using System.IO;
 using Supernova.Scripting.API;
-using MoonSharp.Interpreter.Interop;
 using Supernova.BMS;
+using Neo.IronLua;
+using Supernova.Gameplay;
 
 namespace Supernova.Scripting
 {
     public class ThemeManager
     {
-        public Script script;
+        public Lua LuaScript;
+        public dynamic LuaEnvironment;
         public string ThemeDirectory;
 
-        public Table ThemeTable;
+        public dynamic ThemeTable;
         public string Name;
 
         public int NoteXOffset;
@@ -25,17 +26,20 @@ namespace Supernova.Scripting
         public int NoteWidth;
         public int NoteHeight;
 
-        static Dictionary<string, LuaFunction> FunctionMap;
+        static Dictionary<string, dynamic> FunctionMap;
 
         public List<Colour> ChartColours = new();
 
         public string _Text;
+        public string Style;
+
+        public LuaChunk chunk;
 
         public ThemeManager(string path, bool init = true)
         {
-            UserData.RegistrationPolicy = InteropRegistrationPolicy.Automatic;
+            LuaScript = new Lua();
+            LuaEnvironment = LuaScript.CreateEnvironment<LuaGlobal>();
 
-            script = new Script();
             var f = File.ReadAllText(path);
             _Text = f;
             FunctionMap = LuaFunctionFinder.FindLuaFunctions();
@@ -43,47 +47,56 @@ namespace Supernova.Scripting
             foreach (var (name, value) in FunctionMap)
             {
                 //Console.WriteLine($"Registering {name}");
-                script.Globals[name] = value.GetFunc();
+                LuaEnvironment[name] = value.GetFunc;
             }
+
+            chunk = LuaScript.CompileChunk(_Text, Path.GetFileName(path), new LuaCompileOptions()
+            {
+                DebugEngine = LuaExceptionDebugger.Default
+            });
 
             if (init) _Initialise();
         }
 
         public void _Initialise()
         {
-            script.DoString(_Text);
+            chunk.Run(LuaEnvironment);
 
             CallFunction("OnStart");
 
-            ThemeTable = LuaTable("Theme");
+            ThemeTable = LuaEnvironment.Theme;
 
-            Name = ThemeTable.Get("Name").String ?? "No name specified!!";
+            Name = ThemeTable.Name ?? "No name specified.";
+            Style = ThemeTable.Style;
 
-            var ctable = ThemeTable.Get("NoteColours").Table;
-            var t = ctable.Values.ToList();
-            for (int i = 0; i < t.Count; i++)
+            if (Style == "Play")
             {
-                var val = t[i];
-                var tab = val.Table;
-                var r = (int)tab.Get(1).Number;
-                var g = (int)tab.Get(2).Number;
-                var b = (int)tab.Get(3).Number;
-                var a = (int)tab.Get(4).Number;
-                var v = new Colour()
+                var ct = ThemeTable.NoteColours;
+                var t = ct;
+                for (int i = 0; i < t.Count; i++)
                 {
-                    r = r,
-                    g = g,
-                    b = b,
-                    a = a
-                };
-                ChartColours.Add(v);
+                    var val = t[i];
+                    var tab = val.Table;
+                    var r = (int)tab[1];
+                    var g = (int)tab[2];
+                    var b = (int)tab[3];
+                    var a = (int)tab[4];
+                    var v = new Colour()
+                    {
+                        r = r,
+                        g = g,
+                        b = b,
+                        a = a
+                    };
+                    ChartColours.Add(v);
+                }
+
+                NoteXOffset = (int)ThemeTable.NoteXOffset;
+                NoteYOffset = (int)ThemeTable.NoteYOffset;
+
+                NoteWidth = (int)ThemeTable.NoteWidth;
+                NoteHeight = (int)ThemeTable.NoteHeight;
             }
-
-            NoteXOffset = (int)ThemeTable.Get("NoteXOffset").Number;
-            NoteYOffset = (int)ThemeTable.Get("NoteYOffset").Number;
-
-            NoteWidth = (int)ThemeTable.Get("NoteWidth").Number;
-            NoteHeight = (int)ThemeTable.Get("NoteHeight").Number;
         }
 
         public static ThemeManager LoadTheme(string name, bool init = true)
@@ -98,34 +111,16 @@ namespace Supernova.Scripting
             return m;
         }
 
-        public DynValue LuaCall(string method, object[] args)
+        public dynamic CallFunction(string method)
         {
-            var j = script.Call(script.Globals[method], args);
+            var j = LuaEnvironment[method]();
             return j;
         }
 
-        public DynValue LuaCall(string method)
+        public dynamic CallFunction(string method, object arg)
         {
-            var j = script.Call(script.Globals[method]);
+            var j = LuaEnvironment[method](arg);
             return j;
-        }
-
-        public Table LuaTable(string Name)
-        {
-            Table t = (Table)script.Globals[Name];
-            if (t.GetType() != typeof(Table))
-            {
-                return null;
-            }
-            return t;
-        }
-
-        public DynValue CallFunction(string Name, params object[] args)
-        {
-            var func = script.Globals.Get(Name);
-            if (func.Type != DataType.Function) return null;
-            var res = script.Call(func, args);
-            return res;
         }
 
         public void Update(float Delta)
@@ -149,7 +144,7 @@ namespace Supernova.Scripting
             CallFunction("DrawAfterNotes");
         }
 
-        public void OnJudgement(JudgementData j)
+        public void OnJudgement(Judgement j)
         {
             CallFunction("OnJudgement", j);
         }

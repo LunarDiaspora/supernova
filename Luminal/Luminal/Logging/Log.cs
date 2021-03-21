@@ -9,10 +9,16 @@ namespace Luminal.Logging
     public class Log
     {
         public static ILogger Logger;
+        public static int MinLevel;
 
         public static void SetLogger(ILogger logger)
         {
             Logger = logger;
+        }
+
+        public static void SetLogLevel(int logLevel)
+        {
+            MinLevel = logLevel;
         }
 
         public static void Debug(string msg)

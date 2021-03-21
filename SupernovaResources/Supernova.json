@@ -1,6 +1,7 @@
 {
     "Theme": {
-        "Play": "Default_Play"
+        "Play": "Default_Play",
+        "SongSelect": "Default_Select"
     },
     "SongPaths": [
         ".\\Songs"

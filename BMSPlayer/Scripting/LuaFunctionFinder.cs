@@ -11,10 +11,10 @@ namespace Supernova.Scripting
 {
     class LuaFunctionFinder
     {
-        public static Dictionary<string, LuaFunction> FindLuaFunctions()
+        public static Dictionary<string, dynamic> FindLuaFunctions()
         {
             var asm = Assembly.GetExecutingAssembly();
-            var n = new Dictionary<string, LuaFunction>();
+            var n = new Dictionary<string, dynamic>();
 
             foreach (var t in asm.GetTypes())
             {
@@ -24,7 +24,7 @@ namespace Supernova.Scripting
                 {
                     var attr = (ExposeToLua)attrs[0];
                     Log.Debug($"Creating Lua function {attr.Name} from class {t.Name}");
-                    var fn = (LuaFunction)Activator.CreateInstance(t);
+                    var fn = Activator.CreateInstance(t);
                     n.Add(attr.Name, fn);
                 }
             }

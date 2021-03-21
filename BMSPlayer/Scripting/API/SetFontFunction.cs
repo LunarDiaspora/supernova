@@ -4,22 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Luminal.Core;
-using MoonSharp.Interpreter;
 
 namespace Supernova.Scripting.API
 {
     [ExposeToLua("SN_SetFont")]
-    class SetFontFunction : LuaFunction
+    class SetFontFunction
     {
-        public override DynValue Execute(params DynValue[] args)
+        public bool Execute(string newFont)
         {
-            var newFont = args[0].String;
             if (Globals.Fonts.ContainsKey(newFont))
             {
                 Context.CurrentFont = newFont;
-                return DynValue.NewBoolean(true);
+                return true;
             }
-            return DynValue.NewBoolean(false);
+            return false;
         }
+
+        public Func<string, bool> GetFunc => Execute;
     }
 }

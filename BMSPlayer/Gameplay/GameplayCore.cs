@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Supernova.BMS;
 using Supernova.Threading;
 using Supernova.Shared;
-using MoonSharp.Interpreter;
 using SDL2;
 using Luminal.Core;
 using Supernova.Core;
@@ -24,7 +23,6 @@ namespace Supernova.Gameplay
         EXTRA_POOR = -1
     }
 
-    [MoonSharpUserData]
     public class GameplayCore
     {
         public BMSChart Chart;
@@ -94,11 +92,15 @@ namespace Supernova.Gameplay
                 properTitle = string.Format("{0} {1}", ch.title, ch.subtitle);
             }
 
-            SupernovaMain.RPC.SetPresence(new DiscordRPC.RichPresence()
+            if (SupernovaMain.RPC != null)
             {
-                Details = string.Format("{0} - {1}", ch.artist, properTitle),
-                State = string.Format("{0} Lv. {1}", ch.difficulty, ch.playLevel == 0 ? "???" : ch.playLevel)
-            });
+                SupernovaMain.RPC.SetPresence(new DiscordRPC.RichPresence()
+                {
+                    Details = string.Format("{0} - {1}", ch.artist, properTitle),
+                    State = string.Format("{0} Lv. {1}", ch.difficulty, ch.playLevel == 0 ? "???" : ch.playLevel)
+                });
+
+            }
 
             SDL.SDL_SetWindowTitle(Engine.Window, string.Format("{0} | {1} - {2}", SupernovaMain.BaseTitle, ch.artist, properTitle));
         }
@@ -241,11 +243,7 @@ namespace Supernova.Gameplay
 
             if (SNGlobal.Theme != null)
             {
-                var t = new JudgementData()
-                {
-                    judgement = (int)j
-                };
-                SNGlobal.Theme.OnJudgement(t);
+                SNGlobal.Theme.OnJudgement(j);
             }
         }
 

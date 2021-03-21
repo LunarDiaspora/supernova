@@ -1,29 +1,29 @@
 ﻿using Luminal.Core;
-using MoonSharp.Interpreter;
 using Supernova.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Neo.IronLua;
 
 namespace Supernova.Scripting.API
 {
     [ExposeToLua("SN_GetTextDimensions")]
-    class GetTextDimensions : LuaFunction
+    class GetTextDimensions
     {
-        public override DynValue Execute(params DynValue[] args)
+        public LuaTable Execute(string text)
         {
-            var j = new Table(SNGlobal.Theme.script);
-            int w;
-            int h;
+            dynamic j = new LuaTable();
 
-            Globals.Fonts[Context.CurrentFont].GetDimensions(args[0].String, out w, out h);
+            Globals.Fonts[Context.CurrentFont].GetDimensions(text, out int w, out int h);
 
-            j.Set("w", DynValue.NewNumber(w));
-            j.Set("h", DynValue.NewNumber(h));
+            j.w = w;
+            j.h = h;
 
-            return DynValue.NewTable(j);
+            return j;
         }
+
+        public Func<string, LuaTable> GetFunc => Execute;
     }
 }

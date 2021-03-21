@@ -13,35 +13,72 @@ using DiscordRPC;
 using DiscordRPC.Logging;
 using Luminal.Logging;
 using Supernova.Disk;
+using CommandLine;
+using CommandLine.Text;
 
 namespace Supernova.Core
 {
+    class CommandOptions
+    {
+        [Option('l', "loglevel", HelpText = "The verbosity level of the logging.", Default = 0)]
+        public int LogLevel { get; set; }
+        [Option('c', "chart", HelpText = "The chart hash of the chart to play when starting.", Default = null)]
+        public string Chart { get; set; }
+        [Option("autoplay", Default = false, HelpText = "Plays charts automatically.")]
+        public bool AutoPlay { get; set; }
+        [Option("noRPC", Default = false, HelpText = "Disables the Discord integration.")]
+        public bool NoRPC { get; set; }
+
+        [Usage(ApplicationAlias = "Supernova")]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                return new List<Example>()
+                {
+                };
+            }
+        }
+    }
+
     class SupernovaMain
     {
-        public Engine engine;
+        public static Engine engine;
         public static DiscordRpcClient RPC;
 
         public static readonly string SUPERNOVA_CLIENT_ID = "820302107026391060";
 
         public static string BaseTitle;
 
-        public SupernovaMain(int wwidth = 1280, int wheight = 720, string wtitle = "Supernova")
+        public static CommandOptions args;
+
+        public static SupernovaState State;
+
+        public static Dictionary<string, Folder> SongFolders;
+
+        public SupernovaMain(int wwidth = 1280, int wheight = 720, string wtitle = "Supernova", CommandOptions a = null)
         {
+            State = SupernovaState.LOADING;
+            
             SNGlobal.Config = SupernovaConfigLoader.LoadConfig("Supernova.json");
 
-            RPC = new DiscordRpcClient(SUPERNOVA_CLIENT_ID);
-            RPC.Logger = new DiscordRPC.Logging.ConsoleLogger()
+            args = a;
+            if (!(bool)args?.NoRPC)
             {
-                Level = DiscordRPC.Logging.LogLevel.Warning
-            };
+                RPC = new DiscordRpcClient(SUPERNOVA_CLIENT_ID);
+                RPC.Logger = new DiscordRPC.Logging.ConsoleLogger()
+                {
+                    Level = DiscordRPC.Logging.LogLevel.Warning
+                };
 
-            RPC.OnReady += (sender, e) =>
-            {
-                Log.Info("Discord RPC: Ready on user {0}", e.User.Username);
-            };
+                RPC.OnReady += (sender, e) =>
+                {
+                    Log.Info("Discord RPC: Ready on user {0}", e.User.Username);
+                };
+            }
 
             BaseTitle = wtitle;
-            engine = new Engine();
+            engine = new Engine((int)args?.LogLevel);
 
             engine.OnLoading += OnEngineLoading;
             engine.OnFinishedLoad += OnEngineLoad;
@@ -61,7 +98,7 @@ namespace Supernova.Core
 
         void OnEngineLoading(Engine main)
         {
-            RPC.Initialize();
+            if (RPC != null) RPC.Initialize();
 
             Globals.LoadFont("standard", "Resources/standard.ttf", 16);
             Globals.LoadFont("monospace", "Resources/monospace.ttf", 24);
@@ -81,17 +118,19 @@ namespace Supernova.Core
                 SNGlobal.LoadTheme(key, theme);
                 Log.Debug($"Theme '{key}' loaded successfully, but not initialised yet.");
             }
-
-            SNGlobal.SwitchTheme("Play");
-            Log.Debug($"Lua: Play theme name is '{SNGlobal.Theme.Name}'.");
-
+            
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
             SNGlobal.Gameplay = new GameplayCore();
             //SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
 
-            ChartFinder.FindCharts();
+            SongFolders = ChartFinder.FindCharts();
 
             main.sceneManager.SwitchScene("Main");
+
+            State = SupernovaState.SONG_SELECT;
+
+            SNGlobal.SwitchTheme("SongSelect");
+            Log.Debug($"Lua: Song-select theme name is '{SNGlobal.Theme.Name}'.");
         }
 
         void OnEngineUpdate(Engine main, float Delta)

@@ -1,19 +1,21 @@
-﻿using MoonSharp.Interpreter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Supernova.Gameplay;
 using Supernova.Shared;
 
 namespace Supernova.Scripting.API
 {
     [ExposeToLua("SN_GetGameplay")]
-    class GetGameplay : LuaFunction
+    class GetGameplay
     {
-        public override DynValue Execute(params DynValue[] args)
+        public GameplayCore Execute()
         {
-            return UserData.Create(SNGlobal.Gameplay);
+            return SNGlobal.Gameplay;
         }
+
+        public Func<GameplayCore> GetFunc => Execute;
     }
 }
