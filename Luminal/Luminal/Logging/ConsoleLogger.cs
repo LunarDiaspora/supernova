@@ -72,9 +72,15 @@ namespace Luminal.Logging
             }
 
             var fmt = Formats[ll];
-            var s = msg.Split("\n");
-            foreach (var l in s)
-                Console.WriteLine(string.Format(fmt, l));
+            if (msg != null)
+            {
+                var s = msg.Split("\n");
+                foreach (var l in s)
+                    Console.WriteLine(string.Format(fmt, l));
+            } else
+            {
+                Console.WriteLine(string.Format(fmt, "null"));
+            }
         }
     }
 }

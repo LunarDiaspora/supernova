@@ -17,7 +17,7 @@ namespace Supernova.Disk
             ".bme"
         };
 
-        public static Dictionary<string, Folder> FindCharts()
+        public static List<Folder> FindCharts()
         {
             var paths = SNGlobal.Config.SongPaths;
             if (paths == null)
@@ -25,7 +25,7 @@ namespace Supernova.Disk
                 throw new Exception("Config.SongPaths is null.");
             }
 
-            var folders = new Dictionary<string, Folder>();
+            var folders = new List<Folder>();
             
             foreach (var p in paths)
             {
@@ -50,7 +50,7 @@ namespace Supernova.Disk
                     }
                 }
 
-                folders[p] = folder;
+                folders.Add(folder);
             }
 
             return folders;

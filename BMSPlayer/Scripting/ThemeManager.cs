@@ -8,6 +8,7 @@ using Supernova.Scripting.API;
 using Supernova.BMS;
 using Neo.IronLua;
 using Supernova.Gameplay;
+using Luminal.Logging;
 
 namespace Supernova.Scripting
 {
@@ -33,16 +34,45 @@ namespace Supernova.Scripting
         public string _Text;
         public string Style;
 
+        public string FilePath;
+
         public LuaChunk chunk;
+
+        public bool Error = false;
 
         public ThemeManager(string path, bool init = true)
         {
+            FilePath = path;
+
             LuaScript = new Lua();
-            LuaEnvironment = LuaScript.CreateEnvironment<LuaGlobal>();
 
             var f = File.ReadAllText(path);
             _Text = f;
             FunctionMap = LuaFunctionFinder.FindLuaFunctions();
+
+            try
+            {
+                chunk = LuaScript.CompileChunk(_Text, Path.GetFileName(path), new LuaCompileOptions()
+                {
+                    DebugEngine = LuaExceptionDebugger.Default
+                });
+            } catch(LuaParseException e)
+            {
+                var estr = $"Lua compile error ({Path.GetFileName(path)}): (at line {e.Line}:{e.Column}) {e.Message}\n";
+                Log.Error("");
+                Log.Error(estr);
+                Error = true;
+                return;
+            }
+
+            if (init) _Initialise();
+        }
+
+        public void _Initialise()
+        {
+            if (Error) return;
+            LuaEnvironment = LuaScript.CreateEnvironment<LuaGlobal>();
+            LuaEnvironment.Log = LuaType.GetType(typeof(Log));
 
             foreach (var (name, value) in FunctionMap)
             {
@@ -50,16 +80,6 @@ namespace Supernova.Scripting
                 LuaEnvironment[name] = value.GetFunc;
             }
 
-            chunk = LuaScript.CompileChunk(_Text, Path.GetFileName(path), new LuaCompileOptions()
-            {
-                DebugEngine = LuaExceptionDebugger.Default
-            });
-
-            if (init) _Initialise();
-        }
-
-        public void _Initialise()
-        {
             chunk.Run(LuaEnvironment);
 
             CallFunction("OnStart");
@@ -113,12 +133,27 @@ namespace Supernova.Scripting
 
         public dynamic CallFunction(string method)
         {
-            var j = LuaEnvironment[method]();
-            return j;
+            if (Error) return null;
+
+            try
+            {
+                var j = LuaEnvironment[method]();
+                return j;
+            } catch (LuaRuntimeException e)
+            {
+                var estr = $"Lua runtime error ({Path.GetFileName(FilePath)}): {e.Message}";
+                Log.Error("");
+                Log.Error(estr);
+                Log.Error(e.StackTrace);
+                Error = true;
+                return null;
+            }
         }
 
-        public dynamic CallFunction(string method, object arg)
+        public dynamic CallFunction(string method, dynamic arg)
         {
+            if (Error) return null;
+
             var j = LuaEnvironment[method](arg);
             return j;
         }
@@ -148,5 +183,16 @@ namespace Supernova.Scripting
         {
             CallFunction("OnJudgement", j);
         }
+
+        public void KeyDown(SDL2.SDL.SDL_Scancode k)
+        {
+            CallFunction("OnKeyDown", k);
+        }
+
+        public void KeyUp(SDL2.SDL.SDL_Scancode k)
+        {
+            CallFunction("OnKeyUp", k);
+        }
+
     }
 }

@@ -12,7 +12,7 @@ namespace Supernova.Scripting.API
     [ExposeToLua("SN_GetSongs")]
     class GetSongs
     {
-        public Dictionary<string, Folder> Execute()
+        public List<Folder> Execute()
         {
             if (SupernovaMain.SongFolders != null)
             {
@@ -23,6 +23,6 @@ namespace Supernova.Scripting.API
             } 
         }
 
-        public Func<Dictionary<string, Folder>> GetFunc => Execute;
+        public Func<List<Folder>> GetFunc => Execute;
     }
 }

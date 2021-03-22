@@ -33,6 +33,12 @@ namespace Luminal.Core
         public delegate void DrawCallback(Engine main);
         public event DrawCallback OnDraw;
 
+        public delegate void KeyDownCallback(Engine main, SDL.SDL_Scancode Keycode);
+        public delegate void KeyUpCallback(Engine main, SDL.SDL_Scancode Keycode);
+
+        public event KeyDownCallback KeyDown;
+        public event KeyUpCallback KeyUp;
+
         public static int Width;
         public static int Height;
 

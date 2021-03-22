@@ -15,6 +15,7 @@ using Luminal.Logging;
 using Supernova.Disk;
 using CommandLine;
 using CommandLine.Text;
+using SDL2;
 
 namespace Supernova.Core
 {
@@ -54,7 +55,7 @@ namespace Supernova.Core
 
         public static SupernovaState State;
 
-        public static Dictionary<string, Folder> SongFolders;
+        public static List<Folder> SongFolders;
 
         public SupernovaMain(int wwidth = 1280, int wheight = 720, string wtitle = "Supernova", CommandOptions a = null)
         {
@@ -84,6 +85,9 @@ namespace Supernova.Core
             engine.OnFinishedLoad += OnEngineLoad;
             engine.OnUpdate += OnEngineUpdate;
             engine.OnDraw += OnEngineDraw;
+
+            engine.KeyDown += OnKeyDown;
+            engine.KeyUp += OnKeyUp;
 
             // Logger test
             //Log.Debug("Debug level");
@@ -115,8 +119,14 @@ namespace Supernova.Core
             {
                 Log.Debug($"Theme '{key}' = {theme}");
 
-                SNGlobal.LoadTheme(key, theme);
-                Log.Debug($"Theme '{key}' loaded successfully, but not initialised yet.");
+                var tm = SNGlobal.LoadTheme(key, theme);
+                if (!tm.Error)
+                {
+                    Log.Debug($"Theme '{key}' loaded successfully, but not initialised yet.");
+                } else
+                {
+                    Log.Warn($"Theme '{key}' has not initialised properly! Nothing will happen when it is switched to.");
+                }
             }
             
             //BMSParser.ParseBMSChart("Songs/freedomdive/dive_n7.bme");
@@ -151,6 +161,21 @@ namespace Supernova.Core
             if (SNGlobal.Theme != null)
             {
                 SNGlobal.Theme.Draw();
+            }
+        }
+
+        void OnKeyDown(Engine main, SDL.SDL_Scancode code)
+        {
+            if (SNGlobal.Theme != null)
+            {
+                SNGlobal.Theme.KeyDown(code);
+            }
+        }
+        void OnKeyUp(Engine main, SDL.SDL_Scancode code)
+        {
+            if (SNGlobal.Theme != null)
+            {
+                SNGlobal.Theme.KeyUp(code);
             }
         }
     }
