@@ -1,61 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supernova", "BMSPlayer\Supernova.csproj", "{206E1AC4-6085-44EC-914B-75CB26E3D1BE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Luminal", "Luminal\Luminal.csproj", "{92975918-8E77-4DC3-8153-B11F78FBECE1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuminalNAudioEngine", "LuminalNAudioEngine\LuminalNAudioEngine.csproj", "{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuminalFMODCoreEngine", "LuminalFMODCoreEngine\LuminalFMODCoreEngine.csproj", "{37478DFE-006F-4651-AA00-558F2D2C94CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supernova", "Supernova\Supernova.csproj", "{DC74F6E8-391E-4DED-A162-DE5B6D1FBEAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
-		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Debug|x64.ActiveCfg = Debug|x64
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Debug|x64.Build.0 = Debug|x64
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Release|x64.ActiveCfg = Release|x64
-		{206E1AC4-6085-44EC-914B-75CB26E3D1BE}.Release|x64.Build.0 = Release|x64
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Debug|x64.Build.0 = Debug|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Release|x64.ActiveCfg = Release|Any CPU
-		{92975918-8E77-4DC3-8153-B11F78FBECE1}.Release|x64.Build.0 = Release|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Debug|x64.Build.0 = Debug|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Release|x64.ActiveCfg = Release|Any CPU
-		{7B5F2C09-8087-45BA-823E-45FA8B64DD2B}.Release|x64.Build.0 = Release|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Debug|x64.Build.0 = Debug|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Release|x64.ActiveCfg = Release|Any CPU
-		{37478DFE-006F-4651-AA00-558F2D2C94CD}.Release|x64.Build.0 = Release|Any CPU
+		{DC74F6E8-391E-4DED-A162-DE5B6D1FBEAE}.Debug|x64.ActiveCfg = Debug|x64
+		{DC74F6E8-391E-4DED-A162-DE5B6D1FBEAE}.Debug|x64.Build.0 = Debug|x64
+		{DC74F6E8-391E-4DED-A162-DE5B6D1FBEAE}.Release|x64.ActiveCfg = Release|x64
+		{DC74F6E8-391E-4DED-A162-DE5B6D1FBEAE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {85AB2826-E5F5-4B49-9B97-5A2B2945A25F}
+		SolutionGuid = {194F09D5-20E1-4A0E-BA79-B76CDEF0C485}
 	EndGlobalSection
 EndGlobal

@@ -9,6 +9,7 @@ using Supernova.BMS;
 using Neo.IronLua;
 using Supernova.Gameplay;
 using Luminal.Logging;
+using Supernova.Shared;
 
 namespace Supernova.Scripting
 {
@@ -72,7 +73,10 @@ namespace Supernova.Scripting
         {
             if (Error) return;
             LuaEnvironment = LuaScript.CreateEnvironment<LuaGlobal>();
+
             LuaEnvironment.Log = LuaType.GetType(typeof(Log));
+            LuaEnvironment.SDL = LuaType.GetType(typeof(SDL2.SDL));
+            LuaEnvironment.Global = LuaType.GetType(typeof(SNGlobal));
 
             foreach (var (name, value) in FunctionMap)
             {
@@ -154,8 +158,14 @@ namespace Supernova.Scripting
         {
             if (Error) return null;
 
-            var j = LuaEnvironment[method](arg);
-            return j;
+            if (LuaEnvironment[method] != null)
+            {
+                var j = LuaEnvironment[method](arg);
+                return j;
+            } else
+            {
+                return null;
+            }
         }
 
         public void Update(float Delta)
@@ -186,13 +196,32 @@ namespace Supernova.Scripting
 
         public void KeyDown(SDL2.SDL.SDL_Scancode k)
         {
-            CallFunction("OnKeyDown", k);
+            CallFunction("OnKeyDown", _ScancodeToString(k));
         }
 
         public void KeyUp(SDL2.SDL.SDL_Scancode k)
         {
-            CallFunction("OnKeyUp", k);
+            CallFunction("OnKeyUp", _ScancodeToString(k));
         }
 
+        public string _ScancodeToString(SDL2.SDL.SDL_Scancode k)
+        {
+            var s = "";
+            var i = GameplayCore.Keymap.IndexOf(k);
+            if (i != -1)
+            {
+                switch (i)
+                {
+                    case 0:
+                        s = "Scratch";
+                        break;
+                    default:
+                        s = $"Key{i}";
+                        break;
+                }
+                return s;
+            }
+            return k.ToString();
+        }
     }
 }

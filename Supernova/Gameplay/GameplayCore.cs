@@ -54,6 +54,18 @@ namespace Supernova.Gameplay
 
         public int EXScore = 0;
 
+        public static List<SDL.SDL_Scancode> Keymap = new[]
+            {
+                SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT,
+                SDL.SDL_Scancode.SDL_SCANCODE_A,
+                SDL.SDL_Scancode.SDL_SCANCODE_S,
+                SDL.SDL_Scancode.SDL_SCANCODE_D,
+                SDL.SDL_Scancode.SDL_SCANCODE_SPACE,
+                SDL.SDL_Scancode.SDL_SCANCODE_J,
+                SDL.SDL_Scancode.SDL_SCANCODE_K,
+                SDL.SDL_Scancode.SDL_SCANCODE_L
+            }.ToList();
+
         public void LoadGameplay(string path)
         {
             var cw = new ChartLoadingWorker();
@@ -64,6 +76,16 @@ namespace Supernova.Gameplay
             {
                 JudgementCount[(Judgement)j] = 0;
             };
+        }
+
+        public void LoadGameplay(BMSChart ch)
+        {
+            foreach (var j in Enum.GetValues(typeof(Judgement)))
+            {
+                JudgementCount[(Judgement)j] = 0;
+            };
+
+            _Start(ch);
         }
 
         void _Start(BMSChart ch)
@@ -163,19 +185,7 @@ namespace Supernova.Gameplay
 
         public void JudgeKeycode(SDL.SDL_Scancode Code)
         {
-            var map = new[]
-            {
-                SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT,
-                SDL.SDL_Scancode.SDL_SCANCODE_A,
-                SDL.SDL_Scancode.SDL_SCANCODE_S,
-                SDL.SDL_Scancode.SDL_SCANCODE_D,
-                SDL.SDL_Scancode.SDL_SCANCODE_SPACE,
-                SDL.SDL_Scancode.SDL_SCANCODE_J,
-                SDL.SDL_Scancode.SDL_SCANCODE_K,
-                SDL.SDL_Scancode.SDL_SCANCODE_L
-            }.ToList();
-
-            var k = map.LastIndexOf(Code);
+            var k = Keymap.LastIndexOf(Code);
             if (k != -1) JudgeInput(k);
         }
 

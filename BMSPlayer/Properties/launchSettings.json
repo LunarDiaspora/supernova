@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Supernova": {
-      "commandName": "Project",
-      "workingDirectory": "C:\\Coding\\BMSPlayer\\BMSPlayer\\bin\\x64\\Debug\\net5.0-windows"
-    }
-  }
-}
