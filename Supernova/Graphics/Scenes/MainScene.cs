@@ -37,24 +37,6 @@ namespace Supernova.Graphics.Scenes
             //t.DisplayedString = string.Format("{0} fps\n{1}", Math.Floor(fps), oa);
         }
 
-        public void FillRect(int x, int y, int w, int h)
-        {
-            var r = new SDL.SDL_Rect()
-            {
-                x = x,
-                y = y,
-                w = w,
-                h = h
-            };
-
-            SDL.SDL_RenderFillRect(Engine.Renderer, ref r);
-        }
-
-        public void SetColour(Colour c)
-        {
-            SDL.SDL_SetRenderDrawColor(Engine.Renderer, (byte)c.r, (byte)c.g, (byte)c.b, (byte)c.a);
-        }
-
         public override void Draw(Engine main)
         {
             /*foreach (var i in Drawables)
@@ -81,9 +63,9 @@ namespace Supernova.Graphics.Scenes
                         if (CalculatedY > -SNGlobal.Theme.NoteHeight)
                         {
                             var col = SNGlobal.Theme.ChartColours[(int)note.Column];
-                            SetColour(col);
+                            Context.SetColour((byte)col.r, (byte)col.g, (byte)col.b, (byte)col.a);
                             var X = SNGlobal.Theme.NoteXOffset + (SNGlobal.Theme.NoteWidth * note.Column);
-                            FillRect((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight);
+                            Render.Rectangle((int)X, ActualY, SNGlobal.Theme.NoteWidth, SNGlobal.Theme.NoteHeight, RenderMode.FILL);
 
                             //Globals.Fonts["monospace"].Draw($"{note.Time}", (int)X, ActualY);
                         }
@@ -91,7 +73,7 @@ namespace Supernova.Graphics.Scenes
                 }
 
                 Context.SetColour(255, 255, 255, 255);
-                Globals.Fonts["monospace"].Draw(txt);
+                Globals.Fonts["monospace"].Draw(txt, 0f, 0f);
 
                 if (SNGlobal.Theme != null)
                 {

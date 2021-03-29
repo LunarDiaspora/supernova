@@ -95,16 +95,14 @@ namespace Supernova.Scripting
 
             if (Style == "Play")
             {
-                var ct = ThemeTable.NoteColours;
-                var t = ct;
-                for (int i = 0; i < t.Count; i++)
+                var ct = LuaEnvironment.Theme.NoteColours;
+                foreach (var val in ct)
                 {
-                    var val = t[i];
-                    var tab = val.Table;
-                    var r = (int)tab[1];
-                    var g = (int)tab[2];
-                    var b = (int)tab[3];
-                    var a = (int)tab[4];
+                    var tab = val.Value;
+                    var r = (int)tab.r;
+                    var g = (int)tab.g;
+                    var b = (int)tab.b;
+                    var a = (int)tab.a;
                     var v = new Colour()
                     {
                         r = r,

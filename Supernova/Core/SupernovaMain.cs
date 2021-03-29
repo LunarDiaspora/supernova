@@ -16,6 +16,8 @@ using Supernova.Disk;
 using CommandLine;
 using CommandLine.Text;
 using SDL2;
+using Luminal.IMGUI;
+using Supernova.GUI;
 
 namespace Supernova.Core
 {
@@ -88,6 +90,7 @@ namespace Supernova.Core
 
             engine.KeyDown += OnKeyDown;
             engine.KeyUp += OnKeyUp;
+            engine.OnGUI += GUIManager.GUI;
 
             // Logger test
             //Log.Debug("Debug level");
@@ -97,7 +100,7 @@ namespace Supernova.Core
             //Log.Fatal("Critical level!");
             //Log.Wtf("'Something very wrong has happened' level!");
 
-            engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain));
+            engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain), LuminalFlags.ENABLE_DEAR_IMGUI);
         }
 
         void OnEngineLoading(Engine main)
@@ -137,10 +140,14 @@ namespace Supernova.Core
 
             main.sceneManager.SwitchScene("Main");
 
-            State = SupernovaState.SONG_SELECT;
+            //State = SupernovaState.SONG_SELECT;
 
-            SNGlobal.SwitchTheme("SongSelect");
-            Log.Debug($"Lua: Song-select theme name is '{SNGlobal.Theme.Name}'.");
+            //SNGlobal.SwitchTheme("SongSelect");
+            //Log.Debug($"Lua: Song-select theme name is '{SNGlobal.Theme.Name}'.");
+
+            State = SupernovaState.PLAY;
+            SNGlobal.SwitchTheme("Play");
+            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
         }
 
         void OnEngineUpdate(Engine main, float Delta)
@@ -154,6 +161,8 @@ namespace Supernova.Core
             {
                 SNGlobal.Theme.Update(Delta);
             }
+
+            GUIManager.Update(Delta);
         }
 
         void OnEngineDraw(Engine main)
@@ -177,6 +186,8 @@ namespace Supernova.Core
             {
                 SNGlobal.Theme.KeyUp(code);
             }
+
+            GUIManager.HandleKeypress(code);
         }
     }
 }

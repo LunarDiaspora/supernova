@@ -12,7 +12,7 @@ namespace Supernova.Scripting.API
     {
         public void Execute(string text, int x, int y)
         {
-            Globals.Fonts[Context.CurrentFont].Draw(text, x, y);
+            Globals.Fonts[Context.CurrentFont].Draw(text ?? "", x, y);
         }
 
         public Action<string, int, int> GetFunc => Execute;

@@ -16,7 +16,7 @@ namespace Supernova.Scripting.API
         {
             dynamic j = new LuaTable();
 
-            Globals.Fonts[Context.CurrentFont].GetDimensions(text, out int w, out int h);
+            Globals.Fonts[Context.CurrentFont].GetDimensions(text ?? "", out int w, out int h);
 
             j.w = w;
             j.h = h;

@@ -1,30 +1,28 @@
+local COLOUR_SC = {r = 227, g = 64, b = 32, a = 255}
+local COLOUR_WHITE = {r = 242, g = 242, b = 242, a = 255}
+local COLOUR_BLUE = {r = 34, g = 136, b = 214, a = 255}
+
 Theme = {
     Name = "Default Play Theme",
-    Style = "Play"
+    Style = "Play",
+    NoteColours = {
+        COLOUR_SC,
+        COLOUR_WHITE, COLOUR_BLUE,
+        COLOUR_WHITE, COLOUR_BLUE,
+        COLOUR_WHITE, COLOUR_BLUE,
+        COLOUR_WHITE
+    },
+    NoteXOffset = 150,
+    NoteYOffset = 250,
+    NoteWidth = 60,
+    NoteHeight = 20
 }
 
-local h = SN_LoadImage("Themes/Default_Play/key.png")
+--local h = SN_LoadImage("Themes/Default_Play/key.png")
 local mh = false
 
-Theme.NoteYOffset = 150
-Theme.NoteXOffset = 250
-Theme.NoteWidth = 60
-Theme.NoteHeight = 20
-
-local COLOUR_SC = {227, 64, 32, 255}
-local COLOUR_WHITE = {242, 242, 242, 255}
-local COLOUR_BLUE = {34, 136, 214, 255}
-
-Theme.NoteColours = {
-    [0] = COLOUR_SC,
-    COLOUR_WHITE, COLOUR_BLUE,
-    COLOUR_WHITE, COLOUR_BLUE,
-    COLOUR_WHITE, COLOUR_BLUE,
-    COLOUR_WHITE
-}
-
 local judgeTimer = 0
-local judgeString = ""
+local judgeString = "test"
 
 function OnDraw()
     local gp = SN_GetGameplay()
@@ -37,7 +35,7 @@ function OnDraw()
     --SN_DrawText("poggers", 300, 300)
 
     SN_SetDrawColour(214, 15, 15, 128)
-    --SN_DrawFilledRect(Theme.NoteXOffset,(720-Theme.NoteYOffset),8*Theme.NoteWidth,Theme.NoteHeight)
+    SN_DrawFilledRect(Theme.NoteXOffset,(720-Theme.NoteYOffset),8*Theme.NoteWidth,Theme.NoteHeight)
 
     if gp.Started then
         SN_SetDrawColour(255, 255, 255, 255)
@@ -65,14 +63,14 @@ function OnDraw()
 end
 
 function DrawAfterNotes()
-    if judgeTimer < 1 then
-        SN_SetFont("monospace")
-        local dim = SN_GetTextDimensions(judgeString)
-        local totalWidth = Theme.NoteWidth * 8
-        local half = totalWidth / 2
-        local x = half - (dim.w / 2)
-        SN_DrawText(judgeString, Theme.NoteXOffset + x, (720-Theme.NoteYOffset)-100)
-    end
+    -- if judgeTimer < 1 then
+    --     SN_SetFont("monospace")
+    --     local dim = SN_GetTextDimensions(judgeString)
+    --     local totalWidth = Theme.NoteWidth * 8
+    --     local half = totalWidth / 2
+    --     local x = half - (dim.w / 2)
+    --     SN_DrawText(judgeString, Theme.NoteXOffset + x, (720-Theme.NoteYOffset)-100)
+    -- end
 end
 
 function OnUpdate(dt)
@@ -99,5 +97,9 @@ function OnJudgement(j)
 end
 
 function OnStart()
+
+end
+
+function OnChartLoad()
 
 end
