@@ -16,8 +16,9 @@ using Supernova.Disk;
 using CommandLine;
 using CommandLine.Text;
 using SDL2;
-using Luminal.IMGUI;
+using Luminal.OpenGL;
 using Supernova.GUI;
+using Luminal.OpenGL.ImGuiTheme;
 
 namespace Supernova.Core
 {
@@ -100,7 +101,8 @@ namespace Supernova.Core
             //Log.Fatal("Critical level!");
             //Log.Wtf("'Something very wrong has happened' level!");
 
-            engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain), LuminalFlags.ENABLE_DEAR_IMGUI);
+            engine.StartRenderer(wwidth, wheight, wtitle, typeof(SupernovaMain),
+                LuminalFlags.ENABLE_USER_OPENGL, new SteamGreenTheme());
         }
 
         void OnEngineLoading(Engine main)

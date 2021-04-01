@@ -157,5 +157,15 @@ namespace Supernova.BMS
 
             return true;
         }
+
+        public void DestroyAllAudio()
+        {
+            if (!samplesLoaded) return;
+
+            foreach (var (k, v) in Samples)
+            {
+                v.Destroy();
+            }
+        }
     }
 }

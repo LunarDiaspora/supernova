@@ -8,6 +8,7 @@ using SFML.System;
 using Supernova.Shared;
 using SDL2;
 using Supernova.Scripting;
+using Supernova.Gameplay;
 
 namespace Supernova.Graphics.Scenes
 {
@@ -58,7 +59,7 @@ namespace Supernova.Graphics.Scenes
                         var note = SNGlobal.Gameplay.Notes[i];
                         float Stop = (Engine.Height - SNGlobal.Theme.NoteYOffset);
                         float CalculatedY = Stop -
-                                            ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (36));
+                                            ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (12 * GameplayOptions.HighSpeed));
                         int ActualY = Math.Min((int)CalculatedY, (int)Stop);
                         if (CalculatedY > -SNGlobal.Theme.NoteHeight)
                         {

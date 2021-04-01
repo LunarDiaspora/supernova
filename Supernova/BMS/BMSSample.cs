@@ -23,5 +23,10 @@ namespace Supernova.BMS
         {
             AudioEngineManager.Engine.PlaySound(File);
         }
+
+        public void Destroy()
+        {
+            AudioEngineManager.Engine.DisposeOfFile(File);
+        }
     }
 }

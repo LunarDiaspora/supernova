@@ -10,6 +10,7 @@ using SDL2;
 using Luminal.Core;
 using Supernova.Core;
 using Supernova.Scripting.API;
+using Luminal.Logging;
 
 namespace Supernova.Gameplay
 {
@@ -54,6 +55,8 @@ namespace Supernova.Gameplay
 
         public int EXScore = 0;
 
+        public bool Stopping = false;
+
         public static List<SDL.SDL_Scancode> Keymap = new[]
             {
                 SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT,
@@ -65,6 +68,26 @@ namespace Supernova.Gameplay
                 SDL.SDL_Scancode.SDL_SCANCODE_K,
                 SDL.SDL_Scancode.SDL_SCANCODE_L
             }.ToList();
+
+        public static void ResetAndLoad(string Path)
+        {
+            if (SNGlobal.Gameplay != null) SNGlobal.Gameplay.Stop();
+
+            SNGlobal.Gameplay = new GameplayCore();
+
+            SNGlobal.SwitchTheme("Play");
+            SupernovaMain.State = SupernovaState.PLAY;
+
+            SNGlobal.Gameplay.LoadGameplay(Path);
+        }
+
+        public void Stop()
+        {
+            Started = false;
+            Stopping = true;
+            Log.Debug("GameplayCore: destroying ALL audio data!");
+            Chart.DestroyAllAudio();
+        }
 
         public void LoadGameplay(string path)
         {
@@ -191,6 +214,7 @@ namespace Supernova.Gameplay
 
         public void JudgeInput(int Column)
         {
+            if (!Started) return;
             if (Autoplay) return;
             // Column = 0 through 7. Or 15. Whatever.
             var notesOnCol = Notes.Skip(NoteCount).Where(n => n.Column == Column);
