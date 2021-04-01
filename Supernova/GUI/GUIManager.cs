@@ -20,13 +20,17 @@ namespace Supernova.GUI
         public static bool LoadBMSWindowOpen = false;
         public static bool IsSystemMenuOpen = false;
         public static bool DiagnosticsOpen = false;
+        public static bool OptionsWindowOpen = false;
         public static float dt = 0.0f;
 
         static string BMSPathBuffer = "";
 
         static Vector4 COLOUR_ERROR = new(219f, 53f, 53f, 255f);
 
-        static IntPtr PTR_HISPEED = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.HighSpeed));
+        static IntPtr PTR_HISPEED = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.UserHighSpeed));
+        static IntPtr PTR_WAVEPERIOD = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.WavePeriod));
+        static IntPtr PTR_WAVESCALE = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.WaveScale));
+
 
         static bool FloatSlider(string name, IntPtr variable, float min, float max, string fmt = "%f")
         {
@@ -48,10 +52,15 @@ namespace Supernova.GUI
                 ImGui.Spacing();
                 if (ImGui.BeginMenu("File"))
                 {
-                    if (ImGui.MenuItem("Load BMS From Path..."))
+                    if (ImGui.MenuItem("Load BMS from path..."))
                     {
                         LoadBMSWindowOpen = true;
                     }
+                    ImGui.EndMenu();
+                }
+                if (ImGui.BeginMenu("Game"))
+                {
+                    if (ImGui.MenuItem("Game options")) OptionsWindowOpen = true;
                     ImGui.EndMenu();
                 }
                 if (ImGui.BeginMenu("Debugging"))
@@ -122,13 +131,33 @@ namespace Supernova.GUI
                             ImGui.Text($"Difficulty: {ch.difficulty} lv. {ch.playLevel}");
                             ImGui.Text($"Chart hash: {ch.SHA256_Hash}");
                             ImGui.Text($"{ch.Samples.Count} samples loaded.");
-
-                            FloatSlider("Hi-Speed", PTR_HISPEED, 0, 15, "%f");
                         } else
                         {
                             ImGui.Text("No chart loaded, or chart is currently loading.");
                         }
                     }
+                }
+
+                ImGui.End();
+            }
+
+            if (OptionsWindowOpen)
+            {
+                ImGui.Begin("Game Options", ref OptionsWindowOpen, ImGuiWindowFlags.NoCollapse);
+
+                if (ImGui.TreeNode("Regular options"))
+                {
+                    FloatSlider("Hi-Speed", PTR_HISPEED, 0, 15, "%f");
+                    ImGui.TreePop();
+                }
+
+                if (ImGui.TreeNode("Stupid options"))
+                {
+                    ImGui.Checkbox("Wave", ref GameplayOptions.Wave);
+                    FloatSlider("Wave Period", PTR_WAVEPERIOD, 1f, 5f);
+                    FloatSlider("Wave Scale", PTR_WAVESCALE, 0f, 5f);
+
+                    ImGui.TreePop();
                 }
 
                 ImGui.End();

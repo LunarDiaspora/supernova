@@ -142,14 +142,14 @@ namespace Supernova.Core
 
             main.sceneManager.SwitchScene("Main");
 
-            //State = SupernovaState.SONG_SELECT;
+            State = SupernovaState.SONG_SELECT;
 
-            //SNGlobal.SwitchTheme("SongSelect");
-            //Log.Debug($"Lua: Song-select theme name is '{SNGlobal.Theme.Name}'.");
+            SNGlobal.SwitchTheme("SongSelect");
+            Log.Debug($"Lua: Song-select theme name is '{SNGlobal.Theme.Name}'.");
 
-            State = SupernovaState.PLAY;
-            SNGlobal.SwitchTheme("Play");
-            SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
+            //State = SupernovaState.PLAY;
+            //SNGlobal.SwitchTheme("Play");
+            //SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
         }
 
         void OnEngineUpdate(Engine main, float Delta)

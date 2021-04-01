@@ -71,6 +71,8 @@ namespace Supernova.Gameplay
 
         public static void ResetAndLoad(string Path)
         {
+            SupernovaMain.engine.sceneManager.SwitchScene("Main");
+
             if (SNGlobal.Gameplay != null) SNGlobal.Gameplay.Stop();
 
             SNGlobal.Gameplay = new GameplayCore();
@@ -86,7 +88,7 @@ namespace Supernova.Gameplay
             Started = false;
             Stopping = true;
             Log.Debug("GameplayCore: destroying ALL audio data!");
-            Chart.DestroyAllAudio();
+            if (Chart != null) Chart.DestroyAllAudio();
         }
 
         public void LoadGameplay(string path)
@@ -159,6 +161,18 @@ namespace Supernova.Gameplay
             var DeltaBeat = BPS * Delta;
             Beat += DeltaBeat;
 
+            if (GameplayOptions.Wave)
+            {
+                var root = GameplayOptions.UserHighSpeed;
+                var scale = GameplayOptions.WaveScale;
+
+                var sin = (float)(Math.Sin((Position / (1-GameplayOptions.WavePeriod)) * Math.PI) * scale);
+                GameplayOptions.HighSpeed = (root + sin);
+            } else
+            {
+                GameplayOptions.HighSpeed = GameplayOptions.UserHighSpeed;
+            }
+
             //Notes.RemoveAll(t => t.Beat <= Beat);
 
             var h = Notes.Skip(NoteCount);
@@ -229,7 +243,8 @@ namespace Supernova.Gameplay
         public void HitNote(ChannelEvent closestNote)
         {
             // we have a note
-            Chart.Samples[closestNote.Event].Play();
+            if (Chart.Samples.ContainsKey(closestNote.Event))
+                Chart.Samples[closestNote.Event].Play();
             // now let's see the timing
 
             var timingDelta = (Position - closestNote.Time);
