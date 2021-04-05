@@ -24,6 +24,14 @@ namespace Supernova.Gameplay
         EXTRA_POOR = -1
     }
 
+    public static class JudgementExtension
+    {
+        public static int ToInt(this Judgement j)
+        {
+            return (int)j;
+        }
+    }
+
     public class GameplayCore
     {
         public BMSChart Chart;
@@ -48,7 +56,7 @@ namespace Supernova.Gameplay
         public int NoteCount = 0;
         public int BgmFrameCount = 0;
 
-        public bool Autoplay = true;
+        public static bool Autoplay = true;
 
         public int Combo = 0;
         public int MaxCombo = 0;

@@ -27,22 +27,6 @@ namespace Supernova.GUI
 
         static Vector4 COLOUR_ERROR = new(219f, 53f, 53f, 255f);
 
-        static IntPtr PTR_HISPEED = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.UserHighSpeed));
-        static IntPtr PTR_WAVEPERIOD = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.WavePeriod));
-        static IntPtr PTR_WAVESCALE = new IntPtr(Unsafe.AsPointer(ref GameplayOptions.WaveScale));
-
-
-        static bool FloatSlider(string name, IntPtr variable, float min, float max, string fmt = "%f")
-        {
-            var zero = min;
-            var ten = max;
-
-            var zero_p = new IntPtr(Unsafe.AsPointer(ref zero));
-            var ten_p = new IntPtr(Unsafe.AsPointer(ref ten));
-
-            return ImGui.SliderScalar(name, ImGuiDataType.Float, variable, zero_p, ten_p, fmt);
-        }
-
         public static unsafe void GUI(Engine ___)
         {
             if (IsSystemMenuOpen)
@@ -147,15 +131,20 @@ namespace Supernova.GUI
 
                 if (ImGui.TreeNode("Regular options"))
                 {
-                    FloatSlider("Hi-Speed", PTR_HISPEED, 0, 15, "%f");
+                    ImGui.SliderFloat("Hi-Speed", ref GameplayOptions.UserHighSpeed, 0, 15, "%f");
+
+                    ImGui.DragFloat("Offset", ref GameplayOptions.Offset, 0.01f);
+
+                    ImGui.Checkbox("Autoplay", ref GameplayCore.Autoplay);
+
                     ImGui.TreePop();
                 }
 
                 if (ImGui.TreeNode("Stupid options"))
                 {
                     ImGui.Checkbox("Wave", ref GameplayOptions.Wave);
-                    FloatSlider("Wave Period", PTR_WAVEPERIOD, 1f, 5f);
-                    FloatSlider("Wave Scale", PTR_WAVESCALE, 0f, 5f);
+                    ImGui.SliderFloat("Wave Period", ref GameplayOptions.WavePeriod, 1f, 5f);
+                    ImGui.SliderFloat("Wave Scale", ref GameplayOptions.WaveScale, 0f, 5f);
 
                     ImGui.TreePop();
                 }

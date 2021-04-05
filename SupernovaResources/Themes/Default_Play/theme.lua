@@ -22,7 +22,7 @@ Theme = {
 local mh = false
 
 local judgeTimer = 0
-local judgeString = "test"
+local judgeString = ""
 
 function OnDraw()
     local gp = SN_GetGameplay()
@@ -63,14 +63,14 @@ function OnDraw()
 end
 
 function DrawAfterNotes()
-    -- if judgeTimer < 1 then
-    --     SN_SetFont("monospace")
-    --     local dim = SN_GetTextDimensions(judgeString)
-    --     local totalWidth = Theme.NoteWidth * 8
-    --     local half = totalWidth / 2
-    --     local x = half - (dim.w / 2)
-    --     SN_DrawText(judgeString, Theme.NoteXOffset + x, (720-Theme.NoteYOffset)-100)
-    -- end
+    if judgeTimer < 1 then
+        SN_SetFont("monospace")
+        local dim = SN_GetTextDimensions(judgeString)
+        local totalWidth = Theme.NoteWidth * 8
+        local half = totalWidth / 2
+        local x = half - (dim.w / 2)
+        SN_DrawText(judgeString, Theme.NoteXOffset + x, (720-Theme.NoteYOffset)-100)
+    end
 end
 
 function OnUpdate(dt)
@@ -78,19 +78,19 @@ function OnUpdate(dt)
 end
 
 local judgestrings = {
-    [0] = "Great!",
-    "Great",
-    "Good",
-    "Bad",
-    "Poor",
-    "Poor"
+    PERFECT_GREAT = "Great!",
+    GREAT = "Great",
+    GOOD = "Good",
+    BAD = "Bad",
+    POOR = "Poor",
+    EXTRA_POOR = "Poor"
 }
 
 function OnJudgement(j)
-    local g = SN_GetGameplay()
-    local m = judgestrings[j.judgement]
-    if g.combo >= 1 then
-        m = m .. " " .. tostring(g.combo)
+    local g = Global.Gameplay
+    local m = judgestrings[tostring(j)]
+    if g.Combo >= 1 then
+        m = m .. " " .. tostring(g.Combo)
     end
     judgeString = m
     judgeTimer = 0

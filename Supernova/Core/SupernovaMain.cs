@@ -140,13 +140,9 @@ namespace Supernova.Core
 
             SongFolders = ChartFinder.FindCharts();
 
-            main.sceneManager.SwitchScene("Main");
+            main.sceneManager.SwitchScene("Startup");
 
             State = SupernovaState.SONG_SELECT;
-
-            SNGlobal.SwitchTheme("SongSelect");
-            Log.Debug($"Lua: Song-select theme name is '{SNGlobal.Theme.Name}'.");
-
             //State = SupernovaState.PLAY;
             //SNGlobal.SwitchTheme("Play");
             //SNGlobal.Gameplay.LoadGameplay("Songs/gengaozo/gengaozo_foon_f.bme");
