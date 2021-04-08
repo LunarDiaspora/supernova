@@ -45,7 +45,7 @@ namespace Supernova.BMS
         {
             get
             {
-                return _Time + GameplayOptions.Offset;
+                return _Time + GameplayOptions.Instance.Offset;
             }
             set
             {

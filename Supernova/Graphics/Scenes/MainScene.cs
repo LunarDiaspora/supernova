@@ -58,8 +58,9 @@ namespace Supernova.Graphics.Scenes
                     {
                         var note = SNGlobal.Gameplay.Notes[i];
                         float Stop = (Engine.Height - SNGlobal.Theme.NoteYOffset);
+                        var hs = GameplayOptions.Instance.HighSpeed;
                         float CalculatedY = Stop -
-                                            ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (12 * GameplayOptions.HighSpeed));
+                                            ((note.Time - SNGlobal.Gameplay.Position) * SNGlobal.Theme.NoteHeight * (12 * hs));
                         int ActualY = Math.Min((int)CalculatedY, (int)Stop);
                         if (CalculatedY > -SNGlobal.Theme.NoteHeight)
                         {

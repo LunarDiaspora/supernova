@@ -9,6 +9,7 @@ using Supernova.Shared;
 using Supernova.Core;
 using System.Numerics;
 using Supernova.Gameplay;
+using Supernova.Configuration;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.IO;
@@ -131,9 +132,9 @@ namespace Supernova.GUI
 
                 if (ImGui.TreeNode("Regular options"))
                 {
-                    ImGui.SliderFloat("Hi-Speed", ref GameplayOptions.UserHighSpeed, 0, 15, "%f");
+                    ImGui.SliderFloat("Hi-Speed", ref GameplayOptions.Instance.UserHighSpeed, 0, 15, "%f");
 
-                    ImGui.DragFloat("Offset", ref GameplayOptions.Offset, 0.01f);
+                    ImGui.DragFloat("Offset", ref GameplayOptions.Instance.Offset, 0.01f);
 
                     ImGui.Checkbox("Autoplay", ref GameplayCore.Autoplay);
 
@@ -142,11 +143,16 @@ namespace Supernova.GUI
 
                 if (ImGui.TreeNode("Stupid options"))
                 {
-                    ImGui.Checkbox("Wave", ref GameplayOptions.Wave);
-                    ImGui.SliderFloat("Wave Period", ref GameplayOptions.WavePeriod, 1f, 5f);
-                    ImGui.SliderFloat("Wave Scale", ref GameplayOptions.WaveScale, 0f, 5f);
+                    ImGui.Checkbox("Wave", ref GameplayOptions.Instance.Wave);
+                    ImGui.SliderFloat("Wave Period", ref GameplayOptions.Instance.WavePeriod, 1f, 5f);
+                    ImGui.SliderFloat("Wave Scale", ref GameplayOptions.Instance.WaveScale, 0f, 5f);
 
                     ImGui.TreePop();
+                }
+
+                if (ImGui.Button("Save configuration"))
+                {
+                    GameplayConfig.Save();
                 }
 
                 ImGui.End();

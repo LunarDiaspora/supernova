@@ -169,16 +169,16 @@ namespace Supernova.Gameplay
             var DeltaBeat = BPS * Delta;
             Beat += DeltaBeat;
 
-            if (GameplayOptions.Wave)
+            if (GameplayOptions.Instance.Wave)
             {
-                var root = GameplayOptions.UserHighSpeed;
-                var scale = GameplayOptions.WaveScale;
+                var root = GameplayOptions.Instance.UserHighSpeed;
+                var scale = GameplayOptions.Instance.WaveScale;
 
-                var sin = (float)(Math.Sin((Position / (1-GameplayOptions.WavePeriod)) * Math.PI) * scale);
-                GameplayOptions.HighSpeed = (root + sin);
+                var sin = (float)(Math.Sin((Position / (1-GameplayOptions.Instance.WavePeriod)) * Math.PI) * scale);
+                GameplayOptions.Instance.HighSpeed = (root + sin);
             } else
             {
-                GameplayOptions.HighSpeed = GameplayOptions.UserHighSpeed;
+                GameplayOptions.Instance.HighSpeed = GameplayOptions.Instance.UserHighSpeed;
             }
 
             //Notes.RemoveAll(t => t.Beat <= Beat);
